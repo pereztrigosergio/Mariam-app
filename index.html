@@ -131,10 +131,10 @@ const tstr=today.toDateString();
 const DNAMES=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 const sidx=today.getDay()===0?6:today.getDay()-1;
 const SM={
-  pf:{l:'Lower A',c:'#007AFF',bg:'rgba(0,122,255,0.07)'},
-  th:{l:'Tirón',c:'#007AFF',bg:'rgba(0,122,255,0.07)'},
-  tf:{l:'Empuje',c:'#007AFF',bg:'rgba(0,122,255,0.07)'},
-  ph:{l:'Lower B',c:'#007AFF',bg:'rgba(0,122,255,0.07)'},
+  pf:{l:'Glúteo + Piernas A',c:'#007AFF',bg:'rgba(0,122,255,0.07)'},
+  th:{l:'Espalda + Bíceps',c:'#007AFF',bg:'rgba(0,122,255,0.07)'},
+  tf:{l:'Pecho + Tríceps',c:'#007AFF',bg:'rgba(0,122,255,0.07)'},
+  ph:{l:'Glúteo + Piernas B',c:'#007AFF',bg:'rgba(0,122,255,0.07)'},
 };
 const DEFAULT_SCHED=['pf','th','tf','ph',null,null,null];
 const SPORTS=['Fútbol','Pádel','Voleibol','Surf','Carrera','Ciclismo','Natación','Senderismo','Yoga/Pilates','Otro'];
@@ -394,28 +394,28 @@ function fmtLoad(load, perSide){
 // perSide: true if reps are per side
 
 const SESS={
-  pf:{name:'Lower A',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'strength',base:[
+  pf:{name:'Glúteo + Piernas A',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'strength',base:[
     {id:'la1',name:'Hip Thrust con Barra',pattern:'Empuje de cadera',target:'4x8-12 @RIR 1-2',alts:['Hip Thrust en Máquina','Hip Thrust en Máquina Smith']},
     {id:'la2',name:'Sentadilla Trasera con Barra',pattern:'Dominante de rodilla',target:'3x8-12 @RIR 2',alts:['Sentadilla en Máquina Smith','Hack Squat']},
     {id:'la3',name:'Peso Muerto Rumano Unilateral con Mancuerna',pattern:'Bisagra de cadera unilateral',target:'3x10-15 @RIR 2',alts:['Peso Muerto Rumano Unilateral en Polea','Peso Muerto Rumano Unilateral en Máquina Smith']},
     {id:'la4',name:'Step Down con Mancuernas',pattern:'Dominante de rodilla unilateral',target:'3x10-15/pierna @RIR 2',alts:['Step Up con Mancuernas','Bulgarian Split Squat con Mancuernas']},
     {id:'la5',name:'Abducción de Cadera en Máquina (Tronco Inclinado)',pattern:'Abducción de cadera',target:'3x15-20 @RIR 1-2',alts:['Abducción de Cadera en Polea','Abducción de Cadera con Banda Elástica']},
   ],acc:[]},
-  th:{name:'Tirón',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'hyp',base:[
+  th:{name:'Espalda + Bíceps',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'hyp',base:[
     {id:'up1',name:'Jalón al Pecho en Máquina Convergente (Agarre Neutro)',pattern:'Tracción vertical',target:'4x8-12 @RIR 1-2',alts:['Jalón al Pecho en Polea (Agarre Neutro)','Dominadas Asistidas']},
     {id:'up2',name:'Remo en Máquina con Apoyo Torácico',pattern:'Tracción horizontal',target:'4x8-12 @RIR 1-2',alts:['Remo Hammer Strength','Remo en Polea Baja']},
     {id:'up3',name:'Remo Unilateral en Polea',pattern:'Tracción horizontal unilateral',target:'3x10-15/lado @RIR 2',alts:['Remo Unilateral con Mancuerna','Remo Unilateral en Máquina']},
     {id:'up4',name:'Reverse Pec Deck',pattern:'Deltoides posterior',target:'3x12-15 @RIR 1-2',alts:['Face Pull en Polea con Cuerda','Reverse Cable Fly']},
     {id:'up5',name:'Curl de Bíceps en Polea Baja',pattern:'Flexión de codo',target:'4x10-15 @RIR 1-2',alts:['Curl de Bíceps con Barra EZ','Curl Inclinado con Mancuernas']},
   ],acc:[]},
-  tf:{name:'Empuje',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'strength',base:[
+  tf:{name:'Pecho + Tríceps',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'strength',base:[
     {id:'ps1',name:'Press Inclinado en Máquina Convergente',pattern:'Empuje horizontal',target:'4x8-12 @RIR 1-2',alts:['Press Inclinado con Mancuernas','Press Inclinado en Máquina Smith']},
     {id:'ps2',name:'Chest Press Horizontal en Máquina',pattern:'Empuje horizontal',target:'4x8-12 @RIR 1-2',alts:['Press de Banca con Mancuernas','Press de Banca en Máquina Smith']},
     {id:'ps3',name:'Elevación Lateral Unilateral en Polea',pattern:'Abducción del hombro',target:'4x12-15 @RIR 1-2',alts:['Elevaciones Laterales con Mancuernas','Elevaciones Laterales en Máquina']},
     {id:'ps4',name:'Extensión de Tríceps en Polea con Cuerda',pattern:'Extensión de codo',target:'3x10-15 @RIR 1-2',alts:['Extensión de Tríceps en Polea con Barra Recta','Extensión de Tríceps en Polea con Barra V']},
     {id:'ps5',name:'Extensión de Tríceps Overhead en Polea con Cuerda',pattern:'Extensión de codo por encima de la cabeza',target:'3x10-15 @RIR 1-2',alts:['Extensión Overhead con Mancuerna','Extensión Overhead con Barra EZ']},
   ],acc:[]},
-  ph:{name:'Lower B',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'hyp',base:[
+  ph:{name:'Glúteo + Piernas B',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'hyp',base:[
     {id:'lb1',name:'Hip Thrust con Barra',pattern:'Empuje de cadera',target:'3x8-12 @RIR 1-2',alts:['Hip Thrust en Máquina','Hip Thrust en Máquina Smith']},
     {id:'lb2',name:'Prensa de Piernas a 45°',pattern:'Dominante de rodilla',target:'3x8-12 @RIR 2',alts:['Hack Squat','Sentadilla en Máquina Smith']},
     {id:'lb3',name:'Peso Muerto Rumano Unilateral con Mancuerna',pattern:'Bisagra de cadera unilateral',target:'3x10-15/pierna @RIR 2',alts:['Peso Muerto Rumano Unilateral en Polea','Peso Muerto Rumano Unilateral en Máquina Smith']},
