@@ -51,9 +51,9 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,sans-serif;backgro
 .btn-red{color:#007AFF;border-color:rgba(0,122,255,0.2)}
 .mob-item{background:#fff;border-radius:14px;border:1.5px solid #007AFF;padding:11px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s;box-shadow:0 1px 3px rgba(0,122,255,0.05)}
 .mob-item:active{opacity:.7}
-.mob-item.ok{border-color:#34C77A;background:#F3FBF6;box-shadow:none}
+.mob-item.ok{border-color:#FF7A00;background:#FFF4E8;box-shadow:none}
 .mob-chk{width:20px;height:20px;border-radius:50%;border:1.5px solid #C9D3E0;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:transparent;transition:all .2s}
-.mob-chk.ok{background:#34C77A;border-color:#34C77A;color:#fff}
+.mob-chk.ok{background:#FF7A00;border-color:#FF7A00;color:#fff}
 .cal-lbl{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
 .cal-lbl span{text-align:center;font-size:10px;font-weight:600;color:#8A94A6;padding:2px 0}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
@@ -395,33 +395,32 @@ function fmtLoad(load, perSide){
 
 const SESS={
   pf:{name:'Lower A',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'strength',base:[
-    {id:'la1',name:'Hip Thrust',target:'4x8-12 @RIR 2'},
-    {id:'la2',name:'Sentadilla (Smith o libre)',target:'3x8-12 @RIR 2'},
-    {id:'la3',name:'Peso Muerto Rumano Unilateral',target:'3x10-15 @RIR 2'},
-    {id:'la4',name:'Step Up',target:'3x10-15 @RIR 1-2'},
-    {id:'la5',name:'Abducción inclinada',target:'3x15-20 @RIR 1'},
+    {id:'la1',name:'Hip Thrust con Barra',pattern:'Empuje de cadera',target:'4x8-12 @RIR 1-2',alts:['Hip Thrust en Máquina','Hip Thrust en Máquina Smith']},
+    {id:'la2',name:'Sentadilla Trasera con Barra',pattern:'Dominante de rodilla',target:'3x8-12 @RIR 2',alts:['Sentadilla en Máquina Smith','Hack Squat']},
+    {id:'la3',name:'Peso Muerto Rumano Unilateral con Mancuerna',pattern:'Bisagra de cadera unilateral',target:'3x10-15 @RIR 2',alts:['Peso Muerto Rumano Unilateral en Polea','Peso Muerto Rumano Unilateral en Máquina Smith']},
+    {id:'la4',name:'Step Down con Mancuernas',pattern:'Dominante de rodilla unilateral',target:'3x10-15/pierna @RIR 2',alts:['Step Up con Mancuernas','Bulgarian Split Squat con Mancuernas']},
+    {id:'la5',name:'Abducción de Cadera en Máquina (Tronco Inclinado)',pattern:'Abducción de cadera',target:'3x15-20 @RIR 1-2',alts:['Abducción de Cadera en Polea','Abducción de Cadera con Banda Elástica']},
   ],acc:[]},
   th:{name:'Tirón',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'hyp',base:[
-    {id:'up1',name:'Jalón convergente / agarre neutro',target:'4x8-12 @RIR 2'},
-    {id:'up2',name:'Remo apoyado en máquina',target:'4x8-12 @RIR 2'},
-    {id:'up3',name:'Remo unilateral (polea o mancuerna)',target:'3x10-15 @RIR 1-2'},
-    {id:'up4',name:'Reverse Pec Deck',target:'3x12-15 @RIR 1'},
-    {id:'up5',name:'Curl de bíceps en polea',target:'4x10-15 @RIR 1'},
+    {id:'up1',name:'Jalón al Pecho en Máquina Convergente (Agarre Neutro)',pattern:'Tracción vertical',target:'4x8-12 @RIR 1-2',alts:['Jalón al Pecho en Polea (Agarre Neutro)','Dominadas Asistidas']},
+    {id:'up2',name:'Remo en Máquina con Apoyo Torácico',pattern:'Tracción horizontal',target:'4x8-12 @RIR 1-2',alts:['Remo Hammer Strength','Remo en Polea Baja']},
+    {id:'up3',name:'Remo Unilateral en Polea',pattern:'Tracción horizontal unilateral',target:'3x10-15/lado @RIR 2',alts:['Remo Unilateral con Mancuerna','Remo Unilateral en Máquina']},
+    {id:'up4',name:'Reverse Pec Deck',pattern:'Deltoides posterior',target:'3x12-15 @RIR 1-2',alts:['Face Pull en Polea con Cuerda','Reverse Cable Fly']},
+    {id:'up5',name:'Curl de Bíceps en Polea Baja',pattern:'Flexión de codo',target:'4x10-15 @RIR 1-2',alts:['Curl de Bíceps con Barra EZ','Curl Inclinado con Mancuernas']},
   ],acc:[]},
   tf:{name:'Empuje',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'strength',base:[
-    {id:'ps1',name:'Press inclinado en máquina',target:'4x8-12 @RIR 2'},
-    {id:'ps2',name:'Chest Press convergente',target:'4x8-12 @RIR 2'},
-    {id:'ps3',name:'Elevaciones laterales en polea',target:'4x12-15 @RIR 1'},
-    {id:'ps4',name:'Extensión de tríceps en polea',target:'3x10-15 @RIR 1'},
-    {id:'ps5',name:'Extensión de tríceps por encima de la cabeza (Overhead)',target:'3x10-15 @RIR 1'},
+    {id:'ps1',name:'Press Inclinado en Máquina Convergente',pattern:'Empuje horizontal',target:'4x8-12 @RIR 1-2',alts:['Press Inclinado con Mancuernas','Press Inclinado en Máquina Smith']},
+    {id:'ps2',name:'Chest Press Horizontal en Máquina',pattern:'Empuje horizontal',target:'4x8-12 @RIR 1-2',alts:['Press de Banca con Mancuernas','Press de Banca en Máquina Smith']},
+    {id:'ps3',name:'Elevación Lateral Unilateral en Polea',pattern:'Abducción del hombro',target:'4x12-15 @RIR 1-2',alts:['Elevaciones Laterales con Mancuernas','Elevaciones Laterales en Máquina']},
+    {id:'ps4',name:'Extensión de Tríceps en Polea con Cuerda',pattern:'Extensión de codo',target:'3x10-15 @RIR 1-2',alts:['Extensión de Tríceps en Polea con Barra Recta','Extensión de Tríceps en Polea con Barra V']},
+    {id:'ps5',name:'Extensión de Tríceps Overhead en Polea con Cuerda',pattern:'Extensión de codo por encima de la cabeza',target:'3x10-15 @RIR 1-2',alts:['Extensión Overhead con Mancuerna','Extensión Overhead con Barra EZ']},
   ],acc:[]},
   ph:{name:'Lower B',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'hyp',base:[
-    {id:'lb1',name:'Hip Thrust',target:'3x8-12 @RIR 2'},
-    {id:'lb2',name:'Prensa',target:'3x8-12 @RIR 2'},
-    {id:'lb3',name:'Peso Muerto Rumano Unilateral',target:'3x10-15 @RIR 2'},
-    {id:'lb4',name:'Bulgarian Split Squat',target:'3x10-15 @RIR 1-2'},
-    {id:'lb5',name:'Curl femoral',target:'3x10-15 @RIR 1'},
-    {id:'lb6',name:'Abducción vertical',target:'3x15-20 @RIR 1'},
+    {id:'lb1',name:'Hip Thrust con Barra',pattern:'Empuje de cadera',target:'3x8-12 @RIR 1-2',alts:['Hip Thrust en Máquina','Hip Thrust en Máquina Smith']},
+    {id:'lb2',name:'Prensa de Piernas a 45°',pattern:'Dominante de rodilla',target:'3x8-12 @RIR 2',alts:['Hack Squat','Sentadilla en Máquina Smith']},
+    {id:'lb3',name:'Peso Muerto Rumano Unilateral con Mancuerna',pattern:'Bisagra de cadera unilateral',target:'3x10-15/pierna @RIR 2',alts:['Peso Muerto Rumano Unilateral en Polea','Peso Muerto Rumano Unilateral en Máquina Smith']},
+    {id:'lb4',name:'Curl Femoral Sentado',pattern:'Flexión de rodilla',target:'3x10-15 @RIR 1-2',alts:['Curl Femoral Tumbado','Curl Femoral Unilateral']},
+    {id:'lb5',name:'Abducción de Cadera en Máquina (Posición Vertical)',pattern:'Abducción de cadera',target:'3x15-20 @RIR 1-2',alts:['Abducción de Cadera en Polea','Abducción de Cadera con Banda Elástica']},
   ],acc:[]}
 };
 
@@ -644,6 +643,28 @@ function fmtD(ds){const p=ds.split(' ');return p[2]+' '+p[1];}
 function getReps(id){return gl('reps_'+id)||'';}
 function saveReps(id,val){sv('reps_'+id,val);}
 
+function findEx(id){
+  for(const sk in SESS){const f=SESS[sk].base.find(e=>e.id===id);if(f)return f;}
+  return null;
+}
+function getAltIdx(id){const v=gl('alt_'+id);return v?parseInt(v):0;}
+function getCurrentExName(ex){
+  const idx=getAltIdx(ex.id);
+  return idx>0&&ex.alts&&ex.alts[idx-1]?ex.alts[idx-1]:ex.name;
+}
+function setAlt(id,idx){sv('alt_'+id,idx);closeModal();sH(rTab());}
+function openAltModal(id){
+  const ex=findEx(id);if(!ex||!ex.alts||!ex.alts.length)return;
+  const curIdx=getAltIdx(id);
+  let h='<div style="padding:16px 16px 4px"><div style="font-size:15px;font-weight:700">Cambiar ejercicio</div><div style="font-size:11px;color:#8A94A6;margin-top:2px">Mismas series, reps y RIR</div></div>';
+  const options=[ex.name,...ex.alts];
+  options.forEach((name,i)=>{
+    h+='<div class="opt-row" onclick="setAlt(\''+id+'\','+i+')"><div class="opt-dot" style="background:'+(curIdx===i?'#007AFF':'#EEF1F5')+'"></div><div style="flex:1;font-size:13px;font-weight:'+(curIdx===i?'700':'400')+';color:'+(curIdx===i?'#007AFF':'#111')+'">'+name+(i===0?' (principal)':'')+'</div>'+(curIdx===i?'<span style="color:#007AFF">✓</span>':'')+'</div>';
+  });
+  document.getElementById('modal-body').innerHTML=h;
+  document.getElementById('modal').classList.add('show');
+}
+
 function splitTarget(t){
   if(!t)return{main:'',rir:''};
   const i=t.indexOf('@RIR');
@@ -655,10 +676,15 @@ function renderExList(exs,sdata,isAcc){
   return exs.map((ex,i)=>renderSimpleEx(ex,sdata,i+1)).join('');
 }
 
+function getWeightId(ex){const idx=getAltIdx(ex.id);return idx>0?ex.id+'_alt'+idx:ex.id;}
+function getVariantWeightId(ex,idx){return idx>0?ex.id+'_alt'+idx:ex.id;}
 function renderSimpleEx(ex,sdata,num){
   const ok=ST.done.has(ex.id);
-  const lw=lastWeight(ex.id);
+  const wid=getWeightId(ex);
+  const lw=lastWeight(wid);
   const t=splitTarget(ex.target);
+  const curName=getCurrentExName(ex);
+  const isAlt=curName!==ex.name;
   const c1=ok?'#34C77A':'#007AFF';
   const c2=ok?'#1F8A52':'#0A5FD1';
   const bBg=ok?'#E3F7EA':'#EAF2FE';
@@ -666,7 +692,11 @@ function renderSimpleEx(ex,sdata,num){
     +'<div style="display:flex;align-items:center;gap:10px" onclick="tapEx(\''+ex.id+'\')">'
     +(num?'<div style="width:26px;height:26px;border-radius:8px;background:'+bBg+';color:'+c1+';font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+num+'</div>':'')
     +'<div style="flex:1;min-width:0">'
-    +'<div class="xn'+(ok?' ok':'')+'">'+ex.name+'</div>'
+    +'<div style="display:flex;align-items:center;gap:6px">'
+    +'<div class="xn'+(ok?' ok':'')+'" style="flex:1">'+curName+'</div>'
+    +(ex.alts&&ex.alts.length?'<button onclick="event.stopPropagation();openAltModal(\''+ex.id+'\')" style="flex-shrink:0;background:'+bBg+';border:none;border-radius:7px;padding:4px 7px;font-size:11px;color:'+c1+';cursor:pointer">🔄</button>':'')
+    +'</div>'
+    +(isAlt?'<div style="font-size:9.5px;color:#8A94A6;margin-top:1px">alternativa de '+ex.name+'</div>':'')
     +(t.main?'<div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap">'
       +'<span style="font-size:10px;background:'+bBg+';color:'+c2+';padding:3px 8px;border-radius:7px;font-weight:700">'+t.main+'</span>'
       +(t.rir?'<span style="font-size:10px;background:'+bBg+';color:'+c2+';padding:3px 8px;border-radius:7px;font-weight:700">'+t.rir+'</span>':'')
@@ -674,7 +704,7 @@ function renderSimpleEx(ex,sdata,num){
     +'</div>'
     +'<div style="width:1px;align-self:stretch;background:#EEF1F5;margin:0 2px"></div>'
     +'<div style="display:flex;align-items:center;gap:3px;flex-shrink:0" onclick="event.stopPropagation()">'
-    +'<input type="number" inputmode="decimal" step="0.5" placeholder="0" value="'+(lw?lw.kg:'')+'" onchange="saveWeight(\''+ex.id+'\',this.value)" style="width:42px;text-align:center;border:1.5px solid '+c1+';border-radius:8px;padding:5px 2px;font-size:14px;font-weight:700;color:'+c1+';background:none;font-family:-apple-system,sans-serif">'
+    +'<input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" placeholder="0" value="'+(lw?lw.kg:'')+'" onchange="saveWeight(\''+wid+'\',this.value)" style="width:42px;text-align:center;border:1.5px solid '+c1+';border-radius:8px;padding:5px 2px;font-size:14px;font-weight:700;color:'+c1+';background:none;font-family:-apple-system,sans-serif">'
     +'<span style="font-size:11px;font-weight:700;color:'+c1+'">kg</span></div>'
     +'<div class="chk'+(ok?' ok':'')+'" style="flex-shrink:0">✓</div>'
     +'</div>'
@@ -783,9 +813,9 @@ function toggleDayDetail(i){
       html+='<div style="font-size:12px;color:#999">Sin ejercicios programados todavía.</div>';
     }
     [...sdata.base,...sdata.acc].forEach(ex=>{
-      const lw=lastWeight(ex.id);
+      const lw=lastWeight(getWeightId(ex));
       html+='<div style="font-size:12px;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.05)">'
-        +'<div style="display:flex;justify-content:space-between"><span style="color:#444">'+ex.name+'</span><span style="color:'+sdata.color+';font-weight:600">'+(lw?lw.kg+'kg':'—')+'</span></div>'
+        +'<div style="display:flex;justify-content:space-between"><span style="color:#444">'+getCurrentExName(ex)+'</span><span style="color:'+sdata.color+';font-weight:600">'+(lw?lw.kg+'kg':'—')+'</span></div>'
         +(ex.target?'<div style="font-size:10px;color:#8A94A6;margin-top:1px">'+ex.target+'</div>':'')
         +'</div>';
     });
@@ -939,26 +969,53 @@ function rProg(){
   return h;
 }
 
+function toggleProgDay(sk){ST.progOpen[sk]=!ST.progOpen[sk];sH(rTab());}
+function toggleHistFull(wid){
+  ST.histOpen=ST.histOpen||{};
+  ST.histOpen[wid]=!ST.histOpen[wid];
+  sH(rTab());
+}
 function renderCargasCards(){
   const wl=getWlog();
+  ST.histOpen=ST.histOpen||{};
   let h='';
   ['pf','th','tf','ph'].forEach(sk=>{
     const sdata=SESS[sk];
-    sdata.base.forEach(ex=>{
-      const hist=(wl[ex.id]||[]).slice().reverse();
-      h+='<div class="card" style="padding:12px 14px;margin-bottom:8px">'
-        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:'+(hist.length?'8px':'0')+'">'
-        +'<div style="font-size:13px;font-weight:600;color:#0A2540">'+ex.name+'</div>'
-        +'<div style="font-size:10px;color:#8A94A6">'+sdata.name+'</div></div>';
-      if(hist.length){
-        h+='<div style="display:flex;flex-wrap:wrap;gap:6px">'
-          +hist.map(e=>'<span style="font-size:11px;background:#EAF2FE;color:#007AFF;font-weight:600;padding:4px 9px;border-radius:20px">'+e.kg+'kg <span style="color:#8A94A6;font-weight:400">· '+fmtD(e.d)+'</span></span>').join('')
-          +'</div>';
-      } else {
-        h+='<div style="font-size:11px;color:#B8C0CC">Sin registros todavía</div>';
-      }
+    const open=!!ST.progOpen[sk];
+    h+='<div class="card" style="padding:0;overflow:hidden;margin-bottom:10px">'
+      +'<div onclick="toggleProgDay(\''+sk+'\')" style="display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer">'
+      +'<div style="width:8px;height:8px;border-radius:50%;background:#007AFF"></div>'
+      +'<div style="font-size:13px;font-weight:700;flex:1">'+sdata.name+'</div>'
+      +'<div style="font-size:18px;color:#999">'+(open?'∧':'∨')+'</div></div>';
+    if(open){
+      h+='<div style="padding:0 12px 12px">';
+      sdata.base.forEach(ex=>{
+        const variants=[ex.name,...(ex.alts||[])];
+        const curIdx=getAltIdx(ex.id);
+        h+='<div style="font-size:10px;color:#8A94A6;text-transform:uppercase;letter-spacing:.03em;margin:10px 2px 6px">'+(ex.pattern||'')+'</div>';
+        variants.forEach((vName,vi)=>{
+          const wid=getVariantWeightId(ex,vi);
+          const fullHist=(wl[wid]||[]).slice().reverse();
+          const isCur=curIdx===vi;
+          const showAll=!!ST.histOpen[wid];
+          const shown=showAll?fullHist:fullHist.slice(0,4);
+          const rest=fullHist.length-shown.length;
+          h+='<div style="background:'+(isCur?'#EAF2FE':'#fff')+';border:1px solid '+(isCur?'#BFDBFE':'#EEF1F5')+';border-radius:12px;padding:11px 12px;margin-bottom:8px">'
+            +'<div style="display:flex;justify-content:space-between;align-items:center">'
+            +'<div style="font-size:13px;font-weight:600;color:#0A2540">'+vName+(vi===0?' <span style="font-weight:400;color:#8A94A6">(principal)</span>':'')+'</div>'
+            +(isCur?'<span style="font-size:9px;background:#007AFF;color:#fff;padding:2px 7px;border-radius:20px;font-weight:700">ACTIVO</span>':'')
+            +'</div>'
+            +(ex.target?'<div style="font-size:10px;color:#007AFF;font-weight:700;margin-top:3px">'+ex.target+'</div>':'')
+            +'<div style="margin-top:8px">'
+            +(shown.length?'<div style="display:flex;flex-wrap:wrap;gap:6px">'+shown.map(e=>'<span style="font-size:11px;background:#fff;border:1px solid #EAF2FE;color:#007AFF;font-weight:600;padding:4px 9px;border-radius:20px">'+e.kg+'kg <span style="color:#8A94A6;font-weight:400">· '+fmtD(e.d)+'</span></span>').join('')+'</div>':'<div style="font-size:11px;color:#B8C0CC">Sin registros todavía</div>')
+            +'</div>'
+            +(fullHist.length>4?'<button onclick="toggleHistFull(\''+wid+'\')" style="background:none;border:none;color:#8A94A6;font-size:10.5px;cursor:pointer;padding:6px 0 0;font-family:-apple-system,sans-serif">'+(showAll?'▲ Ver menos':'▼ Ver historial completo ('+fullHist.length+')')+'</button>':'')
+            +'</div>';
+        });
+      });
       h+='</div>';
-    });
+    }
+    h+='</div>';
   });
   return h;
 }
@@ -1017,16 +1074,16 @@ function renderObjetivos(){
   const wc=weekCardioCount(),cardioOkWeek=wc>=2,cardioTotal=getCardioLog().length;
   const psStreak=goalStreak('steps'),slStreak=goalStreak('sleep'),cStreak=cardioStreakWeeks();
   let h='<div class="slbl">Objetivos</div>';
-  h+='<div class="mob-item'+(pasosOk?' ok':'')+'" onclick="toggleGoalDay(\'steps\')">'
-    +'<div class="mob-chk'+(pasosOk?' ok':'')+'" style="'+(pasosOk?'background:#FFD60A;border-color:#FFD60A':'')+'">✓</div>'
+  h+='<div class="mob-item" style="'+(pasosOk?'border-color:#FFD60A;background:#FFFBEA':'')+'" onclick="toggleGoalDay(\'steps\')">'
+    +'<div class="mob-chk" style="'+(pasosOk?'background:#FFD60A;border-color:#FFD60A':'')+'">✓</div>'
     +'<div style="flex:1"><div style="font-size:13px;font-weight:600">🚶 Pasos — mínimo 7.000</div>'
     +'<div style="font-size:11px;color:#8A94A6;margin-top:2px">'+(psStreak?'🔥 '+psStreak+' día'+(psStreak===1?'':'s')+' seguidos':'Objetivo diario')+'</div></div></div>';
-  h+='<div class="mob-item'+(suenoOk?' ok':'')+'" onclick="toggleGoalDay(\'sleep\')">'
-    +'<div class="mob-chk'+(suenoOk?' ok':'')+'" style="'+(suenoOk?'background:#6C4FD1;border-color:#6C4FD1':'')+'">✓</div>'
+  h+='<div class="mob-item" style="'+(suenoOk?'border-color:#6C4FD1;background:#F5F2FF':'')+'" onclick="toggleGoalDay(\'sleep\')">'
+    +'<div class="mob-chk" style="'+(suenoOk?'background:#6C4FD1;border-color:#6C4FD1':'')+'">✓</div>'
     +'<div style="flex:1"><div style="font-size:13px;font-weight:600">😴 Sueño — 7-9 horas</div>'
     +'<div style="font-size:11px;color:#8A94A6;margin-top:2px">'+(slStreak?'🔥 '+slStreak+' día'+(slStreak===1?'':'s')+' seguidos':'Objetivo diario')+'</div></div></div>';
-  h+='<div class="mob-item'+(cardioOkWeek?' ok':'')+'" onclick="logCardio()">'
-    +'<div class="mob-chk'+(cardioOkWeek?' ok':'')+'" style="'+(cardioOkWeek?'background:#E5484D;border-color:#E5484D':'')+'">✓</div>'
+  h+='<div class="mob-item" style="'+(cardioOkWeek?'border-color:#E5484D;background:#FDECEC':'')+'" onclick="logCardio()">'
+    +'<div class="mob-chk" style="'+(cardioOkWeek?'background:#E5484D;border-color:#E5484D':'')+'">✓</div>'
     +'<div style="flex:1"><div style="font-size:13px;font-weight:600">🏃 Cardio Zona 2 — 2 sesiones 20-40min/sem</div>'
     +'<div style="font-size:11px;color:#8A94A6;margin-top:2px">'+wc+'/2 esta semana'+(cStreak?' · 🔥 '+cStreak+' semana'+(cStreak===1?'':'s'):'')+' · '+cardioTotal+' totales</div></div></div>';
   if(cardioTotal)h+='<button class="btn" onclick="undoCardio()" style="font-size:11px;color:#8A94A6;padding:8px;margin-bottom:12px">Deshacer última sesión de cardio</button>';
