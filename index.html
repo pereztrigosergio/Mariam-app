@@ -115,7 +115,7 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,sans-serif;backgro
   </div></div>
   <div id="modal" onclick="if(event.target===this)closeModal()">
     <div id="modal-inner">
-      <div style="padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,0,0,0.08)">
+      <div id="modal-header" style="padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,0,0,0.08)">
         <div style="font-size:14px;font-weight:700" id="modal-title">Título</div>
         <button onclick="closeModal()" style="background:rgba(0,0,0,0.06);border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:15px">✕</button>
       </div>
@@ -441,6 +441,67 @@ const CORE_FINISHER_CATS=[
     {id:'cf4a',name:'Wood Chop en polea',target:'10-15/lado'},{id:'cf4b',name:'Russian Twist',target:'12-16/lado'},{id:'cf4c',name:'Escaladores cruzados',target:'15-20/lado'}]},
 ];
 
+const QUOTES=[
+  "Mueve el culo.","Entrena fuerte o hoy no comes.","¡¡¡VAAAAAAAAMOS COÑO, VAMOS!!!","Besitossssssss ❤️",
+  "¡Policía del peso! ¡SUBEEEEE AHÍ!","Te quedas sin comer, ¿eh? Aprieta.","Ánimo. :)",
+  "Debes ser un jutsu, porque me tienes completamente bajo tu hechizo.",
+  "¿Eres un clon de sombra? Porque cada vez que me doy la vuelta veo a alguien tan increíble como tú.",
+  "¡Intercambio equivalente! Te daré la mitad de mi vida, así que dame la mitad de la tuya.",
+  "Dedito en el culito como no le des fuerte. :)","¡MUEVE EL CULO, QUE ME LO TENGO QUE COMER!",
+  "Si llegas a 100 kg en cualquier ejercicio, te compro una capibara.","Díselo, reina. 💅🏻",
+  "¡Policía marítima! A ver esa concha.","¡¡¡¡¡¡AAAAAAAANIMO!!!!!!",
+  "No importa lo que digan los demás. Nosotros somos los protagonistas del mundo.",
+  "Valora el proceso sobre los resultados.","Como la gente no tiene alas, buscamos formas de volar.",
+  "La suerte no es un factor casual; es el elemento oculto en el campo que sonríe a quienes siguen su deseo.",
+  "No estoy compitiendo con nadie. Solo quiero ser mejor que ayer.",
+  "Puede que sea difícil de hacer, pero nunca imposible.",
+  "Si ganas, vives. Si pierdes, mueres… Si no luchas, no puedes ganar.",
+  "Morir para ganar y arriesgar la vida para ganar son cosas totalmente diferentes. Darlo todo. Aspira a más.",
+  "¡Mantén tu corazón ardiendo!","Sigue adelante… Ese también es tu camino ninja.",
+  "Hoy toca entrenar como si Kakashi estuviera mirando.","Un verdadero guerrero no necesita una espada.",
+  "No tienes enemigos.","Cada día puedes convertirte en alguien mejor que ayer.",
+  "El camino difícil suele ser el correcto.","Eres la persona por la que merece la pena hacerse más fuerte.",
+  "Tu entrenador favorito cree en ti (y también vigila las repeticiones 👀).",
+  "Entrena como si hubiera recompensa. Porque la hay: yo.","Si has abierto la app… ya no hay excusas.",
+  "Entrena fuerte. Luego te doy besitos.","Si sobrevives al entrenamiento… te dejo elegir la cena esta noche.",
+  "A ver si ese culo trabaja en condiciones.","¿Ya estás cansada? Qué rápido.",
+  "Esta app detecta las excusas. Vas regular.","Hoy toca sufrir un poco. Luego ya te doy besos.",
+  "Vamos, que luego dices que estás fuerte gracias a tu entrenador favorito.","La capibara sigue esperando.",
+  "Si hoy das un paso más, ya estás más cerca del Grand Line.",
+  "Todo esfuerzo acaba teniendo un precio… y una recompensa.","Hoy solo toca cumplir con el trabajo.",
+  "El fuego sigue vivo mientras alguien lo proteja.","La capibara sigue en camino… pero primero llegan los 100 kg.",
+  "Error 404: no se han encontrado excusas válidas.",
+  "El trabajo duro es inútil para los que no creen en sí mismos.","La voluntad de fuego nunca desaparece.",
+  "Si no luchas, no puedes ganar.","¡Entrega tu corazón!","La mancuerna pesa menos cuando dejas de mirarla.",
+  "La capibara acaba de negar con la cabeza.","Hoy el entrenador está contento… no lo estropees.",
+  "Te estás poniendo fuerte y encima guapa. Qué abuso.","La barra no muerde. Yo sí.",
+  "El Ministerio del Glúteo te está vigilando.","Sigue así y te subo el sueldo. (Sigues cobrando 0 €).",
+  "Si haces otra serie, desbloqueas un beso legendario.","Nivel de excusas: no puede haber. Así sí.",
+  "Aprovecha el bug.","Error inesperado: se ha detectado demasiada guapura.",
+  "Has encontrado un mensaje oculto. Estoy muy orgulloso de ti.","El amor cambia a las personas.",
+  "La fuerza existe para proteger a quienes quieres.","Incluso el desierto florece.","La arena también protege.",
+  "No necesito un Sharingan para ver lo increíble que eres.",
+  "Si Gaara encontró personas por las que sonreír, yo tuve mucha más suerte: te encontré a ti.",
+  "Entrena con más ganas que Rock Lee.","El examen chunin de hoy consiste en terminar la rutina.",
+  "La barra acaba de preguntarme si hoy piensas trabajar.",
+  "Se ha detectado un intento de escaquear una repetición. Queda registrado.",
+  "¿Sabías que hacer otra serie aumenta un 100 % la probabilidad de recibir besitos? (Fuente: yo).",
+  "Atención. Se ha activado el modo «Mariam puede con esto».",
+  "Cuidado. Cada repetición te hace más peligrosa.","Confirmado: estás más fuerte que ayer.",
+  "Hay un Sergio muy orgulloso al otro lado de esta pantalla.",
+  "Los días normales también pueden convertirse en los más especiales.",
+  "Qué suerte tener a alguien con quien poder ser uno mismo.",
+  "Los sueños se disfrutan más cuando hay alguien animándote.","Entrena por la persona que quieres llegar a ser.",
+  "Hoy también estás un paso más cerca.","Has encontrado un mensaje secreto: gracias por elegirme.",
+  "Sigue entrenando. Te prometo que funciona.",
+  "Da igual cómo haya ido el entrenamiento. Lo importante es que aquí estás.",
+  "Gracias por elegir compartir esto conmigo.","Aún queda chakra.",
+  "No hagas que vaya personalmente a contarte las repeticiones.",
+  "Has desbloqueado el derecho a vacilarme durante 5 minutos.",
+  "El algoritmo dice que hoy estás especialmente guapa.",
+  "Hay sueños que se vuelven más fáciles cuando alguien cree en ti."
+];
+
 const MOB=[
   {id:'m1',n:'Cat-Cow',r:'8 reps',desc:'Cuadrupedia: inhala arqueando hacia abajo, exhala redondeando hacia arriba.',tip:'Fluido. Inhala al arquear, exhala al redondear.'},
   {id:'m2',n:'Rotaciones torácicas (90°)',r:'8/lado',desc:'De lado con caderas y rodillas a 90°, abre el brazo superior hacia atrás rotando la torácica.',tip:'La cadera queda fija. Solo rota la torácica.'},
@@ -481,6 +542,58 @@ let ST={
 
 function sv(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function gl(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+
+// ── FRASE DEL DÍA ───────────────────────────────────
+function getQuoteDayStr(){
+  const d=new Date(today);
+  if(d.getHours()<7)d.setDate(d.getDate()-1);
+  return d.toDateString();
+}
+function getTodayQuote(){
+  const qd=getQuoteDayStr();
+  if(gl('quote_day')===qd){
+    const idx=parseInt(gl('quote_idx')||'0');
+    return QUOTES[idx]||QUOTES[0];
+  }
+  let bag=[];try{bag=JSON.parse(gl('quote_bag')||'[]');}catch(e){}
+  if(!bag.length){
+    bag=QUOTES.map((_,i)=>i);
+    for(let i=bag.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=bag[i];bag[i]=bag[j];bag[j]=t;}
+  }
+  const idx=bag.pop();
+  sv('quote_bag',JSON.stringify(bag));
+  sv('quote_day',qd);
+  sv('quote_idx',String(idx));
+  return QUOTES[idx];
+}
+function quotesEnabled(){return gl('quotes_off')!=='1';}
+function quotePopupMode(){return gl('quote_popup')||'first';}
+function maybeShowQuotePopup(){
+  if(!quotesEnabled()||quotePopupMode()==='never')return;
+  const qd=getQuoteDayStr();
+  if(quotePopupMode()==='always'||gl('quote_popup_shown')!==qd){
+    sv('quote_popup_shown',qd);
+    openQuotePopup();
+  }
+}
+function openQuotePopup(){
+  const q=getTodayQuote();
+  let h='<div style="padding:34px 26px 34px;text-align:center">'
+    +'<div style="font-size:34px;color:#EAF2FE;font-family:Georgia,serif;line-height:0;margin-bottom:6px">“</div>'
+    +'<div style="font-size:16px;font-style:italic;font-family:Georgia,\'Times New Roman\',serif;color:#0A2540;line-height:1.5">'+q+'</div>'
+    +'</div>';
+  document.getElementById('modal-header').style.display='none';
+  document.getElementById('modal-body').innerHTML=h;
+  document.getElementById('modal').classList.add('show');
+}
+function renderQuoteCard(){
+  if(!quotesEnabled())return'';
+  const q=getTodayQuote();
+  return '<div onclick="openQuotePopup()" style="cursor:pointer;background:linear-gradient(135deg,#F5F9FF,#EAF2FE);border:1px solid #DCEBFF;border-radius:16px;padding:14px 16px;margin-bottom:12px;position:relative;overflow:hidden">'
+    +'<div style="font-size:30px;color:rgba(0,122,255,0.15);font-family:Georgia,serif;position:absolute;top:2px;left:10px;line-height:1">“</div>'
+    +'<div style="font-size:13px;font-style:italic;font-family:Georgia,\'Times New Roman\',serif;color:#0A2540;line-height:1.5;padding-left:16px">'+q+'</div>'
+    +'</div>';
+}
 
 function init(){
   const SCHED_VER='v2-lowerA';
@@ -576,6 +689,7 @@ function getWeeklyItem(pool,seed){
 function rHoy(){
   const sk=ST.sched[sidx];
   let h='';
+  h+=renderQuoteCard();
   const mobDone=MOB.filter(m=>ST.mdone.has(m.id)).length;
   h+='<div class="slbl">Mañana</div>';
   h+='<div class="card" style="display:flex;align-items:center;gap:10px;cursor:pointer;border-color:rgba(52,199,89,0.3)" onclick="go(\'mob\')">'
@@ -845,7 +959,7 @@ function openSessModal(dayIdx){
   document.getElementById('modal').classList.add('show');
 }
 function setSess(dayIdx,sk){ST.sched[dayIdx]=sk;sv('sched2',JSON.stringify(ST.sched));closeModal();sH(rSem());}
-function closeModal(){document.getElementById('modal').classList.remove('show');}
+function closeModal(){document.getElementById('modal').classList.remove('show');document.getElementById('modal-header').style.display='';}
 
 // ── MOVILIDAD ──────────────────────────────────────
 function rMob(){
@@ -1198,13 +1312,31 @@ function openSportForDay(ds){
 
 // ── AJUSTES ────────────────────────────────────────
 function rCfg(){
-  let h='<div class="slbl">Datos</div><div class="card">'
+  const qOn=quotesEnabled(),qMode=quotePopupMode();
+  let h='<div class="slbl">Frases motivacionales</div><div class="card">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:'+(qOn?'12px':'0')+'">'
+    +'<div style="font-size:13px;font-weight:600">Mostrar frases</div>'
+    +'<button onclick="toggleQuotes()" style="width:44px;height:26px;border-radius:20px;border:none;background:'+(qOn?'#007AFF':'#EEF1F5')+';position:relative;cursor:pointer">'
+    +'<div style="width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:3px;left:'+(qOn?'21px':'3px')+';transition:left .15s;box-shadow:0 1px 2px rgba(0,0,0,0.15)"></div></button></div>';
+  if(qOn){
+    h+='<div style="font-size:12px;color:#8A94A6;margin-bottom:8px">Pop-up al abrir la app</div>'
+      +'<div style="display:flex;gap:6px">'
+      +[['first','1ª vez del día'],['always','Siempre'],['never','Nunca']].map(function(o){
+        const on=qMode===o[0];
+        return '<button onclick="setQuotePopup(\''+o[0]+'\')" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid '+(on?'#007AFF':'#EEF1F5')+';background:'+(on?'#007AFF':'#fff')+';color:'+(on?'#fff':'#0A2540')+';font-size:11px;font-weight:700;cursor:pointer;font-family:-apple-system,sans-serif">'+o[1]+'</button>';
+      }).join('')
+      +'</div>';
+  }
+  h+='</div>';
+  h+='<div class="slbl">Datos</div><div class="card">'
     +'<button class="btn btn-blue" onclick="exportData()">Exportar progreso</button>'
     +'<button class="btn" onclick="importData()">Importar progreso</button>'
     +'<button class="btn btn-red" onclick="resetApp()">Reiniciar app</button></div>';
   h+='<div style="text-align:center;padding:16px;font-size:11px;color:#ccc">Train. v2.6.0</div>';
   return h;
 }
+function toggleQuotes(){sv('quotes_off',quotesEnabled()?'1':'0');sH(rTab());}
+function setQuotePopup(m){sv('quote_popup',m);sH(rTab());}
 
 function setWeek(w){ST.week=w;sv('wk',String(w));render();}
 function changeMeso(d){ST.meso=Math.max(1,Math.min(TOTAL_MESOS,ST.meso+d));sv('meso',String(ST.meso));render();}
@@ -1374,6 +1506,7 @@ function saveMedidas(){
 }
 
 init();
+setTimeout(maybeShowQuotePopup,400);
 </script>
 </body>
 </html>
