@@ -441,6 +441,11 @@ const CORE_FINISHER_CATS=[
     {id:'cf4a',name:'Wood Chop en polea',target:'10-15/lado'},{id:'cf4b',name:'Russian Twist',target:'12-16/lado'},{id:'cf4c',name:'Escaladores cruzados',target:'15-20/lado'}]},
 ];
 
+const APP_VERSION='2.7.0';
+const CHANGELOG={
+  '2.7.0':['Ejercicios con alternativas intercambiables (🔄) y peso propio para cada una','Objetivos diarios (pasos, sueño, cardio) con rachas y puntos de color en el calendario','Frase motivacional diaria','Nuevos nombres de días: Glúteo+Piernas, Espalda+Bíceps, Pecho+Tríceps'],
+};
+
 const QUOTES=[
   "Mueve el culo.","Entrena fuerte o hoy no comes.","¡¡¡VAAAAAAAAMOS COÑO, VAMOS!!!","Besitossssssss ❤️",
   "¡Policía del peso! ¡SUBEEEEE AHÍ!","Te quedas sin comer, ¿eh? Aprieta.","Ánimo. :)",
@@ -568,6 +573,36 @@ function getTodayQuote(){
 }
 function quotesEnabled(){return gl('quotes_off')!=='1';}
 function quotePopupMode(){return gl('quote_popup')||'first';}
+// ── AVISO DE ACTUALIZACIÓN ─────────────────────────
+function maybeShowUpdateNotice(){
+  const seen=gl('app_version');
+  sv('app_version',APP_VERSION);
+  if(!seen)return false;
+  if(seen===APP_VERSION)return false;
+  const items=CHANGELOG[APP_VERSION];
+  if(!items||!items.length)return false;
+  let h='<div style="padding:6px 16px 18px">'
+    +items.map(function(t){return '<div style="display:flex;gap:8px;padding:6px 0;font-size:13px;color:#0A2540;line-height:1.4"><span style="color:#007AFF;flex-shrink:0">●</span><span>'+t+'</span></div>';}).join('')
+    +'<button class="btn btn-blue" style="margin-top:10px" onclick="closeModal()">Entendido</button>'
+    +'</div>';
+  document.getElementById('modal-title').textContent='✨ Novedades — v'+APP_VERSION;
+  document.getElementById('modal-body').innerHTML=h;
+  document.getElementById('modal').classList.add('show');
+  return true;
+}
+
+function showChangelogNow(){
+  const items=CHANGELOG[APP_VERSION];
+  if(!items)return;
+  let h='<div style="padding:6px 16px 18px">'
+    +items.map(function(t){return '<div style="display:flex;gap:8px;padding:6px 0;font-size:13px;color:#0A2540;line-height:1.4"><span style="color:#007AFF;flex-shrink:0">●</span><span>'+t+'</span></div>';}).join('')
+    +'<button class="btn btn-blue" style="margin-top:10px" onclick="closeModal()">Entendido</button>'
+    +'</div>';
+  document.getElementById('modal-title').textContent='✨ Novedades — v'+APP_VERSION;
+  document.getElementById('modal-body').innerHTML=h;
+  document.getElementById('modal').classList.add('show');
+}
+
 function maybeShowQuotePopup(){
   if(!quotesEnabled()||quotePopupMode()==='never')return;
   const qd=getQuoteDayStr();
@@ -1332,7 +1367,10 @@ function rCfg(){
     +'<button class="btn btn-blue" onclick="exportData()">Exportar progreso</button>'
     +'<button class="btn" onclick="importData()">Importar progreso</button>'
     +'<button class="btn btn-red" onclick="resetApp()">Reiniciar app</button></div>';
-  h+='<div style="text-align:center;padding:16px;font-size:11px;color:#ccc">Train. v2.6.0</div>';
+  h+='<div class="slbl">Acerca de</div><div class="card" style="text-align:center">'
+    +'<div style="font-size:12px;color:#8A94A6;margin-bottom:8px">Train. — versión '+APP_VERSION+'</div>'
+    +(CHANGELOG[APP_VERSION]?'<button class="btn" onclick="showChangelogNow()" style="font-size:12px">Ver novedades de esta versión</button>':'')
+    +'</div>';
   return h;
 }
 function toggleQuotes(){sv('quotes_off',quotesEnabled()?'1':'0');sH(rTab());}
@@ -1506,7 +1544,10 @@ function saveMedidas(){
 }
 
 init();
-setTimeout(maybeShowQuotePopup,400);
+setTimeout(function(){
+  const shown=maybeShowUpdateNotice();
+  setTimeout(maybeShowQuotePopup,shown?1800:400);
+},400);
 </script>
 </body>
 </html>
