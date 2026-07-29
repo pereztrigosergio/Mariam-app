@@ -691,8 +691,8 @@ function rTab(){
   if(ST.tab==='mob')return rMob();
   if(ST.tab==='prog')return rProg();
   if(ST.tab==='cal')return rCal();
-  if(ST.tab==='rc')return rRc();
   if(ST.tab==='medidas')return rMedidas();
+  if(ST.tab==='rc')return rRc();
   if(ST.tab==='cfg')return rCfg();
   return rHoy();
 }
@@ -853,7 +853,7 @@ function renderSimpleEx(ex,sdata,num){
     +'</div>'
     +'<div style="width:1px;align-self:stretch;background:#EEF1F5;margin:0 2px"></div>'
     +'<div style="display:flex;align-items:center;gap:3px;flex-shrink:0" onclick="event.stopPropagation()">'
-    +'<input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" placeholder="0" value="'+(lw?lw.kg:'')+'" onchange="saveWeight(\''+wid+'\',this.value)" style="width:42px;text-align:center;border:1.5px solid '+c1+';border-radius:8px;padding:5px 2px;font-size:14px;font-weight:700;color:'+c1+';background:none;font-family:-apple-system,sans-serif">'
+    +'<input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" placeholder="0" value="'+(lw?lw.kg:'')+'" onchange="saveWeight(\''+wid+'\',this.value)" style="width:48px;text-align:center;border:1.5px solid '+c1+';border-radius:8px;padding:5px 2px;font-size:16px;font-weight:700;color:'+c1+';background:none;font-family:-apple-system,sans-serif">'
     +'<span style="font-size:11px;font-weight:700;color:'+c1+'">kg</span></div>'
     +'<div class="chk'+(ok?' ok':'')+'" style="flex-shrink:0">✓</div>'
     +'</div>'
@@ -1108,10 +1108,10 @@ function rProg(){
       +'<div class="sum-stat"><div class="sum-num" style="color:#FF7A00">'+mob+'</div><div class="sum-lbl">movilidades</div></div></div>';
   }
   h+='<div class="slbl">Medidas corporales</div>';
-  h+='<div class="card" style="cursor:pointer;display:flex;align-items:center;gap:10px" onclick="openMedidas()">'
+  h+='<div class="card" style="cursor:pointer;display:flex;align-items:center;gap:10px" onclick="go(\'medidas\')">'
     +'<div style="width:36px;height:36px;border-radius:10px;background:rgba(0,122,255,0.08);display:flex;align-items:center;justify-content:center;font-size:18px">📏</div>'
     +'<div style="flex:1"><div style="font-size:13px;font-weight:600">Registrar medidas</div>'
-    +'<div style="font-size:11px;color:#999;margin-top:2px">'+getMedidasSummary()+'</div></div>'
+    +'<div style="font-size:11px;color:#999;margin-top:2px">Cintura, cadera, brazos, muslos…</div></div>'
     +'<div style="font-size:18px;color:#999">›</div></div>';
   h+='<div class="slbl">Cargas de entrenamiento</div>';
   h+=renderCargasCards();
@@ -1434,113 +1434,72 @@ function goBack(){
 // ── CORE SESSION ──────────────────────────────────
 
 
-// ── MEDIDAS ────────────────────────────────────────
-var MEDIDAS=[
-  {k:'Pecho',tip:'Cinta horizontal a la altura de los pectorales, brazos relajados.',mejor:'subir'},
-  {k:'Cintura',tip:'Punto más estrecho del abdomen, sin apretar la cinta.',mejor:'bajar'},
-  {k:'Cadera',tip:'Punto más ancho de la cadera/glúteo, de pie con los pies juntos.',mejor:'subir'},
-  {k:'Glúteo',tip:'Punto más ancho del glúteo, de pie.',mejor:'subir'},
-  {k:'Muslo der.',tip:'Parte más ancha del muslo derecho.',mejor:'subir'},
-  {k:'Muslo izq.',tip:'Igual que el muslo derecho.',mejor:'subir'},
-  {k:'Brazo der.',tip:'Bíceps derecho en tensión, parte más ancha.',mejor:'subir'},
-  {k:'Brazo izq.',tip:'Igual que el brazo derecho.',mejor:'subir'},
+
+// ── MEDIDAS ─────────────────────────────────────────
+const MEDIDAS=[
+  {k:'Pecho'},{k:'Cintura'},{k:'Cadera'},{k:'Glúteo'},
+  {k:'Muslo der.'},{k:'Muslo izq.'},{k:'Brazo der.'},{k:'Brazo izq.'}
 ];
-var MEDIDAS_KEYS=MEDIDAS.map(function(m){return m.k;});
-function getMedRecs(){var r=[];try{r=JSON.parse(gl('medidas_records')||'[]');}catch(e){}return r;}
-function getMedidasSummary(){
-  var recs=getMedRecs();
-  if(!recs.length)return 'Sin registros — mide al final de cada mesociclo';
-  var d=new Date(recs[recs.length-1].date);
-  return 'Último: '+d.toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'})+' · '+recs.length+' registro'+(recs.length>1?'s':'');
+function getMedLog(){try{return JSON.parse(gl('medidas2')||'{}');}catch(e){return{};}}
+function saveMedValue(k,val,ds){
+  val=parseFloat((val+'').replace(',','.'));
+  if(isNaN(val))return;
+  const log=getMedLog();if(!log[k])log[k]=[];
+  ds=ds||tstr;
+  const idx=log[k].findIndex(e=>e.d===ds);
+  if(idx>=0)log[k][idx].v=val;else log[k].push({d:ds,v:val});
+  sv('medidas2',JSON.stringify(log));
+  sH(rTab());
 }
-function medDelta(recs,k){
-  if(recs.length<2)return null;
-  var base=recs[0].data[k],last=recs[recs.length-1].data[k];
-  if(!base||!last)return null;
-  return{diff:parseFloat((last-base).toFixed(1)),pct:parseFloat(((last-base)/base*100).toFixed(1))};
+function addMedValue(k){
+  const el=document.getElementById('newmed_'+k.replace(/[^a-zA-Z]/g,''));
+  if(!el||!el.value)return;
+  saveMedValue(k,el.value);
+  showCel('📏','Medida guardada');
 }
-function medDeltaColor(delta,mejor){
-  if(!delta)return '#999';
-  return mejor==='subir'?(delta.diff>0?'#34C759':'#007AFF'):(delta.diff<0?'#34C759':'#007AFF');
-}
-function buildMedChart(recs,key,W,H,PAD){
-  var pts=recs.map(function(r,i){return{x:i,y:r.data[key],d:new Date(r.date)};}).filter(function(p){return p.y;});
-  if(pts.length<2)return '<div style="text-align:center;padding:20px;font-size:12px;color:#999">Necesitas al menos 2 registros.</div>';
-  var minY=Math.min.apply(null,pts.map(function(p){return p.y;}))-2;
-  var maxY=Math.max.apply(null,pts.map(function(p){return p.y;}))+2;
-  var n=pts.length;
-  function cx(i){return PAD+(i/(n-1))*(W-PAD*2);}
-  function cy(v){return H-PAD-((v-minY)/(maxY-minY))*(H-PAD*2);}
-  var path='M';pts.forEach(function(p,i){path+=(i?'L':'')+cx(i).toFixed(1)+','+cy(p.y).toFixed(1);});
-  var els='';
-  pts.forEach(function(p,i){
-    els+='<circle cx="'+cx(i).toFixed(1)+'" cy="'+cy(p.y).toFixed(1)+'" r="4" fill="#007AFF"/>';
-    els+='<text x="'+cx(i).toFixed(1)+'" y="'+(cy(p.y)-9).toFixed(1)+'" text-anchor="middle" font-size="10" fill="#333">'+p.y+'</text>';
-    if(i===0||i===n-1)els+='<text x="'+cx(i).toFixed(1)+'" y="'+(H-4)+'" text-anchor="'+(i===0?'start':'end')+'" font-size="9" fill="#999">'+p.d.toLocaleDateString('es-ES',{day:'numeric',month:'short'})+'</text>';
-  });
-  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;display:block;margin:0 auto 10px"><path d="'+path+'" fill="none" stroke="rgba(0,122,255,0.3)" stroke-width="2"/><path d="'+path+'L'+cx(n-1).toFixed(1)+','+H+' L'+cx(0).toFixed(1)+','+H+' Z" fill="rgba(0,122,255,0.06)"/>'+els+'</svg>';
-}
-function switchMedChart(key,btn){
-  document.querySelectorAll('#med-chart-sel .fbtn').forEach(function(b){b.classList.remove('on');});
-  btn.classList.add('on');
-  var wrap=document.getElementById('med-chart-wrap');
-  if(wrap)wrap.innerHTML=buildMedChart(getMedRecs(),key,340,120,30);
-}
-function rMedChart(recs){
-  var h='<div class="slbl">Evolución</div><div class="frow" id="med-chart-sel">';
-  MEDIDAS_KEYS.forEach(function(k,i){
-    if(recs.some(function(r){return r.data[k];}))h+='<button class="fbtn'+(i===0?' on':'')+'" onclick="switchMedChart(\''+k+'\',this)">'+k+'</button>';
-  });
-  var fk=MEDIDAS_KEYS.find(function(k){return recs.some(function(r){return r.data[k];});});
-  return h+'</div><div id="med-chart-wrap">'+buildMedChart(recs,fk,340,120,30)+'</div>';
-}
-function rMedidas(){
-  var recs=getMedRecs();
-  var h='<button class="btn" onclick="go(\'prog\',\'back\')" style="color:#007AFF;border-color:rgba(0,122,255,0.2)">← Volver</button>';
-  h+='<div class="slbl">Medidas corporales</div>';
-  h+='<div style="background:rgba(0,122,255,0.05);border:1px solid rgba(0,122,255,0.12);border-radius:12px;padding:10px 13px;margin-bottom:12px;font-size:12px;color:#007AFF;line-height:1.6">📅 Mide al final de cada mesociclo. El % muestra evolución respecto a tu primera medida.</div>';
-  if(recs.length>=2)h+=rMedChart(recs);
-  h+='<div class="slbl">Resumen actual</div>';
-  var lr=recs[recs.length-1];
-  MEDIDAS.forEach(function(m){
-    var last=lr&&lr.data[m.k];var delta=medDelta(recs,m.k);var col=medDeltaColor(delta,m.mejor);
-    h+='<div class="card" style="padding:12px 14px;margin-bottom:7px"><div style="display:flex;align-items:center;gap:8px"><div style="flex:1"><div style="font-size:13px;font-weight:700">'+m.k+'</div><div style="font-size:10px;color:#999;margin-top:2px">'+m.tip+'</div></div>'+(last?'<div style="text-align:right"><div style="font-size:18px;font-weight:800">'+last+' <span style="font-size:11px;color:#999">cm</span></div>'+(delta?'<div style="font-size:11px;font-weight:700;color:'+col+'">'+(delta.diff>0?'+':'')+delta.diff+' cm ('+(delta.pct>0?'+':'')+delta.pct+'%)</div>':'<div style="font-size:11px;color:#999">Base</div>')+'</div>':'<div style="font-size:12px;color:#ccc">—</div>')+'</div></div>';
-  });
-  h+='<button class="btn btn-blue" onclick="openMedidas()">+ Nuevo registro</button>';
-  if(recs.length){
-    h+='<div class="slbl">Historial</div>';
-    recs.slice().reverse().forEach(function(rec,i){
-      var d=new Date(rec.date);var isBase=i===recs.length-1;
-      h+='<div class="card" style="padding:12px 14px;margin-bottom:7px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:12px;font-weight:700">'+d.toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'})+'</div>'+(isBase?'<div style="font-size:10px;background:rgba(0,122,255,0.1);color:#007AFF;padding:2px 8px;border-radius:99px">BASE</div>':'')+'</div><div style="display:flex;flex-wrap:wrap;gap:6px">'+MEDIDAS_KEYS.filter(function(k){return rec.data[k];}).map(function(k){return '<div style="font-size:11px;background:rgba(0,0,0,0.04);border-radius:6px;padding:3px 8px"><span style="color:#999">'+k+'</span> <strong>'+rec.data[k]+'</strong></div>';}).join('')+'</div></div>';
-    });
-  }
-  return h;
-}
-function openMedidas(){
-  document.getElementById('modal-title').textContent='Nuevo registro';
-  var recs=getMedRecs();var lr=recs[recs.length-1]||{data:{}};
-  var html='<div style="padding:12px 16px"><div style="font-size:12px;color:#999;margin-bottom:14px">Introduce tus medidas en cm.</div>';
-  MEDIDAS.forEach(function(m){
-    var last=lr.data[m.k]||'';
-    html+='<div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><div style="font-size:13px;font-weight:600;flex:1">'+m.k+'</div><input type="number" id="med_'+m.k.replace(/[^a-zA-Z]/g,'_')+'" placeholder="'+(last||'cm')+'" value="'+(last||'')+'" step="0.1" style="width:80px;padding:7px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.12);font-size:13px;text-align:center;font-family:-apple-system,sans-serif"></div><div style="font-size:11px;color:#999">'+m.tip+'</div></div>';
-  });
-  html+='<button class="btn btn-blue" style="margin-top:6px" onclick="saveMedidas()">Guardar</button></div>';
-  document.getElementById('modal-body').innerHTML=html;
+function editMedEntry(k,ds){
+  const log=getMedLog();const e=(log[k]||[]).find(x=>x.d===ds);
+  if(!e)return;
+  let h='<div style="padding:16px">'
+    +'<div style="font-size:12px;color:#8A94A6;margin-bottom:10px">'+k+' · '+fmtD(ds)+' · cm</div>'
+    +'<input type="text" inputmode="decimal" id="editMedInput" value="'+e.v+'" style="width:100%;border:1.5px solid #007AFF;border-radius:10px;padding:12px;font-size:16px;text-align:center;font-weight:700;color:#007AFF;margin-bottom:12px;box-sizing:border-box;font-family:-apple-system,sans-serif">'
+    +'<button class="btn btn-blue" onclick="saveMedEdit(\''+k+'\',\''+ds+'\')">Guardar cambios</button>'
+    +'<button class="btn btn-red" onclick="deleteMedEntry(\''+k+'\',\''+ds+'\')">Eliminar registro</button>'
+    +'</div>';
+  document.getElementById('modal-title').textContent='Editar medida';
+  document.getElementById('modal-body').innerHTML=h;
   document.getElementById('modal').classList.add('show');
 }
-function saveMedidas(){
-  var data={};
-  MEDIDAS.forEach(function(m){
-    var el=document.getElementById('med_'+m.k.replace(/[^a-zA-Z]/g,'_'));
-    if(el&&el.value)data[m.k]=parseFloat(el.value);
+function saveMedEdit(k,ds){
+  const val=document.getElementById('editMedInput').value;
+  saveMedValue(k,val,ds);
+  closeModal();
+}
+function deleteMedEntry(k,ds){
+  const log=getMedLog();if(!log[k])return;
+  log[k]=log[k].filter(e=>e.d!==ds);
+  sv('medidas2',JSON.stringify(log));
+  closeModal();sH(rTab());
+}
+function rMedidas(){
+  const log=getMedLog();
+  let h='<div class="slbl">Medidas corporales</div>';
+  MEDIDAS.forEach(m=>{
+    const hist=(log[m.k]||[]).slice().reverse();
+    h+='<div class="card" style="margin-bottom:10px">'
+      +'<div style="font-size:13px;font-weight:700;color:#0A2540;margin-bottom:8px">'+m.k+'</div>'
+      +'<div style="display:flex;gap:8px;margin-bottom:'+(hist.length?'10px':'0')+'">'
+      +'<input type="text" inputmode="decimal" id="newmed_'+m.k.replace(/[^a-zA-Z]/g,'')+'" placeholder="cm" style="flex:1;border:1.5px solid #007AFF;border-radius:9px;padding:8px 10px;font-size:16px;font-weight:700;color:#007AFF;text-align:center;font-family:-apple-system,sans-serif">'
+      +'<button onclick="addMedValue(\''+m.k+'\')" style="background:#007AFF;color:#fff;border:none;border-radius:9px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:-apple-system,sans-serif">Guardar</button>'
+      +'</div>';
+    if(hist.length){
+      h+='<div>'+hist.map(e=>'<div onclick="editMedEntry(\''+m.k+'\',\''+e.d+'\')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 4px;border-top:1px solid #F2F4F7;cursor:pointer">'
+        +'<span style="font-size:12px;color:#5C6B7F">'+fmtD(e.d)+'</span>'
+        +'<span style="font-size:13px;font-weight:700;color:#0A2540">'+e.v+' cm</span></div>').join('')+'</div>';
+    }
+    h+='</div>';
   });
-  if(!Object.keys(data).length){alert('Introduce al menos una medida.');return;}
-  var recs=getMedRecs();
-  recs.push({date:new Date().toISOString(),data:data});
-  sv('medidas_records',JSON.stringify(recs));
-  sv('medidas_last',JSON.stringify(recs[recs.length-1]));
-  closeModal();showCel('📏','Medidas guardadas');
-  ST.tab='medidas';sH(rMedidas());
+  return h;
 }
 
 init();
