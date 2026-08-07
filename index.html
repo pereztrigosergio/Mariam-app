@@ -692,6 +692,7 @@ function rTab(){
   if(ST.tab==='prog')return rProg();
   if(ST.tab==='cal')return rCal();
   if(ST.tab==='medidas')return rMedidas();
+  if(ST.tab==='casa')return rCasa();
   if(ST.tab==='rc')return rRc();
   if(ST.tab==='cfg')return rCfg();
   return rHoy();
@@ -731,6 +732,11 @@ function rHoy(){
     +'<div style="width:36px;height:36px;border-radius:10px;background:rgba(52,199,89,0.08);display:flex;align-items:center;justify-content:center;font-size:18px">☀️</div>'
     +'<div style="flex:1"><div style="font-size:13px;font-weight:600">Movilidad matutina</div>'
     +'<div style="font-size:11px;color:#999">'+mobDone+'/'+MOB.length+' completados</div></div>'
+    +'<div style="font-size:18px;color:#999">›</div></div>';
+  h+='<div class="card" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:14px" onclick="go(\'casa\')">'
+    +'<div style="width:36px;height:36px;border-radius:10px;background:rgba(0,122,255,0.08);display:flex;align-items:center;justify-content:center;font-size:18px">🏠</div>'
+    +'<div style="flex:1"><div style="font-size:13px;font-weight:600">Entrena en Casa</div>'
+    +'<div style="font-size:11px;color:#999">Sesión rápida generada al momento</div></div>'
     +'<div style="font-size:18px;color:#999">›</div></div>';
 
   if(!sk){
@@ -1265,6 +1271,7 @@ function rCal(){
     if(isGoalDone('steps',ds))dots.push('#FFD60A');
     if(isGoalDone('sleep',ds))dots.push('#6C4FD1');
     if(getCardioLog().indexOf(ds)>=0)dots.push('#E5484D');
+    if(isCasaDone(ds))dots.push('#0EA5A4');
     h+='<div class="cal-d'+(isT?' today':'')+'" onclick="'+(isFuture?'':'calDay(\''+ds+'\')')+'" style="'+(isFuture?'opacity:.35':'cursor:pointer')+'">'
       +'<div class="cal-dn" style="font-weight:'+(isT?'800':'400')+';color:'+(isT?'#007AFF':'')+'">'+d+'</div>'
       +'<div style="display:flex;gap:1.5px;margin-top:2px;justify-content:center">'+dots.map(function(c){return '<div style="width:3px;height:3px;border-radius:50%;background:'+c+';flex-shrink:0"></div>';}).join('')+'</div></div>';
@@ -1272,7 +1279,7 @@ function rCal(){
   h+='</div>';
   h+='<div style="display:flex;gap:10px;padding:14px 2px;flex-wrap:wrap">';
   Object.keys(SM).forEach(sk=>h+='<div style="display:flex;align-items:center;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:'+SM[sk].c+'"></div><div style="font-size:10px;color:#999">'+SESS[sk].name+'</div></div>');
-  const legend=[['#FF7A00','Movilidad'],['#FFD60A','Pasos'],['#6C4FD1','Sueño'],['#E5484D','Cardio Z2']];
+  const legend=[['#FF7A00','Movilidad'],['#FFD60A','Pasos'],['#6C4FD1','Sueño'],['#E5484D','Cardio Z2'],['#0EA5A4','Casa']];
   legend.forEach(function(l){h+='<div style="display:flex;align-items:center;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:'+l[0]+'"></div><div style="font-size:10px;color:#999">'+l[1]+'</div></div>';});
   h+='</div>';
   h+=renderObjetivos();
@@ -1298,6 +1305,12 @@ function calDay(ds){
     +'<div style="width:10px;height:10px;border-radius:50%;background:#FF7A00"></div>'
     +'<div style="flex:1;font-size:13px;font-weight:'+(mob?'700':'400')+';color:'+(mob?'#B85C00':'#111')+'">Movilidad matutina</div>'
     +(mob?'<span style="color:#FF7A00">✓</span>':'')+'</div></div>';
+  const gCasa=isCasaDone(ds);
+  h+='<div class="card"><div style="font-size:12px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Entrena en Casa</div>'
+    +'<div onclick="toggleCasaDoneForDay(\''+ds+'\')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:'+(gCasa?'rgba(14,165,164,0.1)':'rgba(0,0,0,0.03)')+';cursor:pointer;border:1px solid '+(gCasa?'rgba(14,165,164,0.3)':'rgba(0,0,0,0.06)')+'">'
+    +'<div style="width:10px;height:10px;border-radius:50%;background:#0EA5A4"></div>'
+    +'<div style="flex:1;font-size:13px;font-weight:'+(gCasa?'700':'400')+';color:'+(gCasa?'#0B7F7E':'#111')+'">🏠 Sesión en casa</div>'
+    +(gCasa?'<span style="color:#0EA5A4">✓</span>':'')+'</div></div>';
   const gS=isGoalDone('steps',ds),gL=isGoalDone('sleep',ds),gC=getCardioLog().indexOf(ds)>=0;
   h+='<div class="card"><div style="font-size:12px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Objetivos</div>'
     +'<div onclick="toggleGoalForDay(\'steps\',\''+ds+'\')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:6px;background:'+(gS?'rgba(255,214,10,0.12)':'rgba(0,0,0,0.03)')+';cursor:pointer;border:1px solid '+(gS?'rgba(255,214,10,0.4)':'rgba(0,0,0,0.06)')+'">'
@@ -1499,6 +1512,240 @@ function rMedidas(){
     }
     h+='</div>';
   });
+  return h;
+}
+
+// ── ENTRENA EN CASA ─────────────────────────────────
+const HLIB={
+  push_h:[{n:'Flexiones'},{n:'Flexiones con pausa'},{n:'Flexiones declinadas',hard:true},{n:'Flexiones diamante',hard:true}],
+  push_v:[{n:'Flexiones en pica',hard:true},{n:'Flexiones en pica elevadas',hard:true}],
+  pull:[{n:'Superman con tracción'},{n:'Ángel de nieve invertido'},{n:'Elevación en Y'},{n:'Elevación en T'},{n:'Elevación en W'},{n:'Remo prono'},{n:'Cobra con tracción'},{n:'Gateo del oso',hard:true},{n:'Gateo del cangrejo',hard:true},{n:'Inchworm',hard:true}],
+  knee:[{n:'Sentadilla'},{n:'Sentadilla con pausa'},{n:'Sentadilla tempo'},{n:'Sentadilla con salto',plyo:true},{n:'Step Up'},{n:'Step Down'},{n:'Sentadilla búlgara',hard:true},{n:'Zancada hacia atrás'},{n:'Zancada caminando',hard:true},{n:'Sentadilla cosaca',hard:true}],
+  hip:[{n:'Puente de glúteo'},{n:'Puente de glúteo unilateral'},{n:'Hip Thrust unilateral'},{n:'Frog Pump'},{n:'Buenos días'},{n:'Buenos días unilateral',hard:true}],
+  ham:[{n:'Curl femoral deslizante'},{n:'Curl femoral deslizante unilateral',hard:true},{n:'Curl nórdico asistido',hard:true},{n:'Curl nórdico excéntrico',hard:true},{n:'Hamstring Walkout',hard:true},{n:'Puente isométrico de isquios'}],
+  glute:[{n:'Abducción lateral tumbado'},{n:'Fire Hydrant'},{n:'Clamshell'},{n:'Plancha lateral con abducción',hard:true}],
+  core_ext:[{n:'Dead Bug'},{n:'Hollow Hold'},{n:'Hollow Rock',hard:true},{n:'Plancha frontal'},{n:'Plancha con alcance',hard:true}],
+  core_rot:[{n:'Bird Dog'},{n:'Bird Dog con pausa'},{n:'Plancha lateral'},{n:'Plancha lateral con rotación',hard:true},{n:'Bear Hold'}],
+  core_flex:[{n:'Crunch'},{n:'Crunch inverso'},{n:'Toques de pies'},{n:'V-Up'},{n:'V-Up alternos',hard:true},{n:'Elevaciones de rodillas'}],
+  cardio:[{n:'Burpee',plyo:true,hard:true},{n:'Burpee sin flexión',plyo:true},{n:'Sentadilla con salto',plyo:true},{n:'Zancada con salto',plyo:true},{n:'Escaladores'},{n:'Rodillas altas'},{n:'Plank Jack',plyo:true},{n:'Squat Thrust',plyo:true},{n:'Salto horizontal',plyo:true},{n:'Salto en tijera',plyo:true}],
+};
+const HGROUPS={push_h:'upper',push_v:'upper',pull:'upper',knee:'lower',hip:'lower',ham:'lower',glute:'lower',core_ext:'core',core_rot:'core',core_flex:'core',cardio:'cardio'};
+const HSUB={knee:'knee',hip:'hip',ham:'hip',glute:'knee'};
+const STRENGTH_POOL=['push_h','push_v','pull','knee','hip','ham','glute'];
+const METABOLIC_POOL=['cardio','knee','hip','core_ext','core_rot','core_flex'];
+
+function hPickPattern(pool,state){
+  let cands=pool.slice();
+  const coreOk=(state.coreCount/(state.total||1))<0.25||state.total<4;
+  const nonCore=cands.filter(p=>HGROUPS[p]!=='core');
+  if(!coreOk&&nonCore.length)cands=nonCore;
+  cands.sort(()=>Math.random()-0.5);
+  cands.sort((a,b)=>{
+    const score=p=>(HGROUPS[p]===state.lastGroup?1:0)+((HSUB[p]&&HSUB[p]===state.lastSub)?1:0);
+    return score(a)-score(b);
+  });
+  return cands[0];
+}
+function hPickExercise(pat,state){
+  const avail=HLIB[pat].filter(e=>!state.used.has(e.n));
+  const list=avail.length?avail:HLIB[pat];
+  let opts=list.filter(e=>!(state.lastPlyo&&e.plyo));
+  if(!opts.length)opts=list;
+  return opts[Math.floor(Math.random()*opts.length)];
+}
+function hDrawSlot(pool,state){
+  const pat=hPickPattern(pool,state);
+  const ex=hPickExercise(pat,state);
+  state.used.add(ex.n);
+  state.lastGroup=HGROUPS[pat];state.lastSub=HSUB[pat]||null;state.lastPlyo=!!ex.plyo;
+  state.total++;if(HGROUPS[pat]==='core')state.coreCount++;
+  return{name:ex.n,hard:!!ex.hard,plyo:!!ex.plyo,pattern:pat};
+}
+function hBuildEMOM(min,intensity,pool,state){
+  const n=intensity==='alta'?4:intensity==='media'?3:2;
+  const exs=[];for(let i=0;i<n;i++)exs.push(hDrawSlot(pool,state));
+  const reps=intensity==='alta'?'15-20 reps (o 40s)':intensity==='media'?'12-15 reps (o 30s)':'10-12 reps (o 20s)';
+  return{type:'EMOM',label:'EMOM · '+min+' min',minutes:min,desc:'Cada minuto pasa al siguiente ejercicio en este orden ('+reps+'). Descansa lo que sobre del minuto y repite el ciclo.',exs};
+}
+function hBuildTabata(min,pool,state){
+  const sets=min>=8?2:1;
+  const tabataSets=[];
+  for(let s=0;s<sets;s++){
+    const n=Math.random()<0.5?1:2;
+    const exs=[];for(let i=0;i<n;i++)exs.push(hDrawSlot(pool,state));
+    tabataSets.push(exs);
+  }
+  return{type:'Tabata',label:'Tabata · '+min+' min',minutes:min,desc:'20s trabajo al máximo / 10s descanso × 8 rondas.'+(sets>1?' (2 tandas de ejercicios distintas)':''),tabataSets};
+}
+function hBuildIntervalos(min,intensity,pool,state){
+  const work=intensity==='alta'?45:intensity==='media'?40:30;
+  const rest=intensity==='alta'?15:intensity==='media'?20:30;
+  const rounds=Math.max(4,Math.round((min*60)/(work+rest)));
+  const nEx=Math.min(6,Math.max(3,Math.round(rounds/2)));
+  const exs=[];for(let i=0;i<nEx;i++)exs.push(hDrawSlot(pool,state));
+  return{type:'Intervalos',label:'Intervalos · '+min+' min',minutes:min,desc:work+'s trabajo / '+rest+'s descanso. Repite la lista en bucle hasta completar el tiempo.',exs};
+}
+function hBuildAMRAP(min,pool,state){
+  const n=min>=7?5:4;
+  const exs=[];for(let i=0;i<n;i++)exs.push(hDrawSlot(pool,state));
+  return{type:'AMRAP',label:'AMRAP · '+min+' min',minutes:min,desc:'Completa el máximo número de rondas posibles de esta lista en '+min+' minutos.',exs};
+}
+const H_TYPE_RULES={EMOM:{min:8,max:20},Intervalos:{min:8,max:20},Tabata:{min:4,max:8,step:4},AMRAP:{min:5,max:7}};
+function hBuildBlock(type,min,intensity,pool,state){
+  if(type==='EMOM')return hBuildEMOM(min,intensity,pool,state);
+  if(type==='Tabata')return hBuildTabata(min,pool.concat(['cardio']),state);
+  if(type==='Intervalos')return hBuildIntervalos(min,intensity,pool,state);
+  return hBuildAMRAP(min,pool.concat(['cardio']),state);
+}
+function hPlanBlocks(totalMin){
+  let nBlocks;
+  if(totalMin<=25)nBlocks=Math.random()<0.5?2:3;
+  else if(totalMin<=30)nBlocks=Math.random()<0.4?2:3;
+  else nBlocks=Math.random()<0.3?3:4;
+  const allTypes=Object.keys(H_TYPE_RULES);
+  const flexTypes=['EMOM','Intervalos'];
+  let types=[flexTypes[Math.floor(Math.random()*flexTypes.length)]],last=types[0];
+  for(let i=1;i<nBlocks;i++){
+    const opts=allTypes.filter(t=>t!==last);
+    const t=opts[Math.floor(Math.random()*opts.length)];
+    types.push(t);last=t;
+  }
+  types.sort(()=>Math.random()-0.5);
+  let mins=types.map(t=>H_TYPE_RULES[t].min);
+  let used=mins.reduce((a,b)=>a+b,0);
+  let remaining=totalMin-used;
+  while(remaining>0){
+    let assigned=false;
+    for(let i=0;i<types.length&&remaining>0;i++){
+      const t=types[i],rule=H_TYPE_RULES[t];
+      if(t==='Tabata'){
+        if(mins[i]===4&&remaining>=4){mins[i]=8;remaining-=4;assigned=true;}
+      } else if(mins[i]<rule.max){
+        mins[i]++;remaining--;assigned=true;
+      }
+    }
+    if(!assigned)break;
+  }
+  return types.map((t,i)=>[t,mins[i]]);
+}
+function isCasaDone(ds){return !!gl('casa_completed_'+(ds||tstr));}
+function toggleCasaDoneToday(){const k='casa_completed_'+tstr;if(gl(k))localStorage.removeItem(k);else sv(k,'1');sH(rTab());}
+function toggleCasaDoneForDay(ds){const k='casa_completed_'+ds;if(gl(k))localStorage.removeItem(k);else sv(k,'1');calDay(ds);}
+function generateHomeWorkout(objetivo,minutes,intensidad){
+  const pool=objetivo==='metabolico'?METABOLIC_POOL:STRENGTH_POOL;
+  const combo=hPlanBlocks(minutes);
+  const state={used:new Set(),lastGroup:null,lastSub:null,lastPlyo:false,coreCount:0,total:0};
+  const blocks=combo.map(spec=>hBuildBlock(spec[0],spec[1],intensidad,pool,state));
+  return{objetivo,minutes,intensidad,blocks};
+}
+function hBlockNames(b){
+  if(b.type==='Tabata')return b.tabataSets.flat().map(e=>e.name);
+  return b.exs.map(e=>e.name);
+}
+function getCasaWorkout(){try{return JSON.parse(gl('casa_workout')||'null');}catch(e){return null;}}
+function saveCasaWorkout(w){sv('casa_workout',JSON.stringify(w));}
+function casaGenerate(){
+  const obj=gl('casa_obj')||'fuerza';
+  const min=parseInt(gl('casa_min')||'30');
+  const intensity=gl('casa_int')||'media';
+  const w=generateHomeWorkout(obj,min,intensity);
+  saveCasaWorkout(w);
+  sH(rTab());
+}
+function casaSetParam(k,v){sv('casa_'+k,v);sH(rTab());}
+function casaReset(){localStorage.removeItem('casa_workout');sH(rTab());}
+function casaRegenAll(){
+  const w=getCasaWorkout();if(!w)return;
+  saveCasaWorkout(generateHomeWorkout(w.objetivo,w.minutes,w.intensidad));
+  sH(rTab());
+}
+function casaRegenBlock(bi){
+  const w=getCasaWorkout();if(!w)return;
+  const usedElsewhere=new Set();
+  w.blocks.forEach((b,i)=>{if(i!==bi)hBlockNames(b).forEach(n=>usedElsewhere.add(n));});
+  const pool=w.objetivo==='metabolico'?METABOLIC_POOL:STRENGTH_POOL;
+  const state={used:usedElsewhere,lastGroup:null,lastSub:null,lastPlyo:false,coreCount:0,total:0};
+  w.blocks[bi]=hBuildBlock(w.blocks[bi].type,w.blocks[bi].minutes,w.intensidad,pool,state);
+  saveCasaWorkout(w);
+  sH(rTab());
+}
+function casaOpenSub(bi,ei,ti){
+  const w=getCasaWorkout();if(!w)return;
+  const b=w.blocks[bi];
+  const cur=ti!==undefined?b.tabataSets[ti][ei]:b.exs[ei];
+  const pat=cur.pattern;
+  const usedElsewhere=new Set();
+  w.blocks.forEach((bl,i)=>{hBlockNames(bl).forEach(n=>{if(n!==cur.name)usedElsewhere.add(n);});});
+  const opts=HLIB[pat].filter(e=>!usedElsewhere.has(e.n));
+  let h='<div style="padding:16px 16px 4px"><div style="font-size:15px;font-weight:700">Cambiar ejercicio</div><div style="font-size:11px;color:#8A94A6;margin-top:2px">Mismo patrón de movimiento</div></div>';
+  opts.forEach(o=>{
+    const isCur=o.n===cur.name;
+    h+='<div class="opt-row" onclick="casaApplySub('+bi+','+ei+','+(ti===undefined?'null':ti)+',\''+o.n.replace(/'/g,"\\'")+'\')"><div class="opt-dot" style="background:'+(isCur?'#007AFF':'#EEF1F5')+'"></div><div style="flex:1;font-size:13px;font-weight:'+(isCur?'700':'400')+';color:'+(isCur?'#007AFF':'#111')+'">'+o.n+'</div>'+(isCur?'<span style="color:#007AFF">✓</span>':'')+'</div>';
+  });
+  document.getElementById('modal-body').innerHTML=h;
+  document.getElementById('modal').classList.add('show');
+}
+function casaApplySub(bi,ei,ti,name){
+  const w=getCasaWorkout();if(!w)return;
+  const b=w.blocks[bi];
+  const target=ti===null?b.exs[ei]:b.tabataSets[ti][ei];
+  const pat=target.pattern;
+  const found=HLIB[pat].find(e=>e.n===name);
+  if(found){target.name=found.n;target.hard=!!found.hard;target.plyo=!!found.plyo;}
+  saveCasaWorkout(w);
+  closeModal();sH(rTab());
+}
+function hExRow(ex,badge,onSub){
+  return '<div class="exc" style="align-items:center">'
+    +'<div style="flex:1;min-width:0"><div class="xn">'+ex.name+(ex.hard?' <span style="font-size:9px;color:#8A94A6">(técnico)</span>':'')+'</div>'
+    +(badge?'<div style="font-size:10px;color:#0A5FD1;font-weight:700;margin-top:3px">'+badge+'</div>':'')+'</div>'
+    +'<button onclick="'+onSub+'" style="flex-shrink:0;background:#EAF2FE;border:none;border-radius:7px;padding:5px 8px;font-size:11px;color:#007AFF;cursor:pointer">🔄</button>'
+    +'</div>';
+}
+function rCasaBlock(b,bi){
+  let h='<div class="card" style="padding:0;overflow:hidden;margin-bottom:12px">'
+    +'<div style="padding:13px 14px;border-bottom:1px solid #EEF1F5">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center">'
+    +'<div style="font-size:13px;font-weight:700;color:#0A2540">'+b.label+'</div>'
+    +'<button onclick="casaRegenBlock('+bi+')" style="background:none;border:none;color:#007AFF;font-size:11px;cursor:pointer;font-weight:600">🔁 Regenerar bloque</button></div>'
+    +'<div style="font-size:11px;color:#8A94A6;margin-top:4px;line-height:1.5">'+b.desc+'</div></div>'
+    +'<div style="padding:8px 12px 12px">';
+  if(b.type==='Tabata'){
+    b.tabataSets.forEach((set,ti)=>{
+      if(b.tabataSets.length>1)h+='<div style="font-size:10px;font-weight:700;color:#8A94A6;text-transform:uppercase;padding:8px 2px 4px">Tanda '+(ti+1)+'</div>';
+      set.forEach((ex,ei)=>{h+=hExRow(ex,null,'casaOpenSub('+bi+','+ei+','+ti+')');});
+    });
+  } else {
+    b.exs.forEach((ex,ei)=>{h+=hExRow(ex,null,'casaOpenSub('+bi+','+ei+')');});
+  }
+  h+='</div></div>';
+  return h;
+}
+function rCasa(){
+  const w=getCasaWorkout();
+  if(w){
+    let h='<div class="slbl">🏠 Entrena en Casa</div>';
+    h+='<div class="card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+      +'<div><div style="font-size:12px;color:#8A94A6">'+(w.objetivo==='metabolico'?'🔥 Metabólico':'💪 Fuerza + Metabólico')+' · '+w.minutes+' min · '+(w.intensidad==='suave'?'😊 Suave':w.intensidad==='alta'?'🔥 Alta':'😅 Media')+'</div></div>'
+      +'<button onclick="casaReset()" style="background:none;border:none;color:#8A94A6;font-size:11px;cursor:pointer">✕ Elegir otro</button></div>';
+    w.blocks.forEach((b,bi)=>h+=rCasaBlock(b,bi));
+    const done=isCasaDone(tstr);
+    h+='<button class="btn '+(done?'btn-green':'btn-blue')+'" onclick="toggleCasaDoneToday()">'+(done?'✓ Completado hoy — pulsa para desmarcar':'Marcar sesión de hoy como completada')+'</button>';
+    h+='<button class="btn" onclick="casaRegenAll()" style="margin-top:8px">🔁 Regenerar entrenamiento completo</button>';
+    return h;
+  }
+  const obj=gl('casa_obj')||'fuerza',min=gl('casa_min')||'30',intensity=gl('casa_int')||'media';
+  let h='<div class="slbl">🏠 Entrena en Casa</div>';
+  h+='<div class="card" style="text-align:center;color:#5C6B7F;font-size:12px;line-height:1.5;margin-bottom:14px">Sesiones cortas (25-35 min) para cuando no puedas ir al gimnasio. No sustituye tu programa — es un plan B inteligente.</div>';
+  h+='<div class="slbl">Objetivo</div><div class="frow" style="margin-bottom:14px">'
+    +[['fuerza','💪 Fuerza + Metabólico'],['metabolico','🔥 Metabólico']].map(function(o){
+      return '<button class="fbtn'+(obj===o[0]?' on':'')+'" onclick="casaSetParam(\'obj\',\''+o[0]+'\')" style="flex:1">'+o[1]+'</button>';
+    }).join('')+'</div>';
+  h+='<div class="slbl">Tiempo</div><div class="frow" style="margin-bottom:14px">'
+    +['25','30','35'].map(function(m){return '<button class="fbtn'+(min===m?' on':'')+'" onclick="casaSetParam(\'min\',\''+m+'\')" style="flex:1">'+m+' min</button>';}).join('')+'</div>';
+  h+='<div class="slbl">Intensidad</div><div class="frow" style="margin-bottom:18px">'
+    +[['suave','😊 Suave'],['media','😅 Media'],['alta','🔥 Alta']].map(function(o){return '<button class="fbtn'+(intensity===o[0]?' on':'')+'" onclick="casaSetParam(\'int\',\''+o[0]+'\')" style="flex:1">'+o[1]+'</button>';}).join('')+'</div>';
+  h+='<button class="btn btn-blue" onclick="casaGenerate()">GENERAR ENTRENAMIENTO</button>';
   return h;
 }
 
