@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Train.">
@@ -441,9 +444,10 @@ const CORE_FINISHER_CATS=[
     {id:'cf4a',name:'Wood Chop en polea',target:'10-15/lado'},{id:'cf4b',name:'Russian Twist',target:'12-16/lado'},{id:'cf4c',name:'Escaladores cruzados',target:'15-20/lado'}]},
 ];
 
-const APP_VERSION='2.7.0';
+const APP_VERSION='2.8.0';
 const CHANGELOG={
   '2.7.0':['Ejercicios con alternativas intercambiables (🔄) y peso propio para cada una','Objetivos diarios (pasos, sueño, cardio) con rachas y puntos de color en el calendario','Frase motivacional diaria','Nuevos nombres de días: Glúteo+Piernas, Espalda+Bíceps, Pecho+Tríceps'],
+  '2.8.0':['Nuevo módulo 🏠 Entrena en Casa: genera entrenamientos de 25-35 min combinando EMOM/Tabata/Intervalos/AMRAP, marcable como completado y visible en el calendario','Medidas corporales rediseñadas: % de cambio respecto al primer registro (o a la fecha que marques con ★), fecha editable al añadir una medida','La app ahora se actualiza sola al reabrirla si hay una versión nueva disponible'],
 };
 
 const QUOTES=[
@@ -1785,6 +1789,20 @@ setTimeout(function(){
   const shown=maybeShowUpdateNotice();
   setTimeout(maybeShowQuotePopup,shown?1800:400);
 },400);
+
+function checkForAppUpdate(){
+  if(navigator.onLine===false)return;
+  fetch(location.pathname+'?_ts='+Date.now(),{cache:'no-store'})
+    .then(function(r){return r.text();})
+    .then(function(txt){
+      const m=txt.match(/const APP_VERSION=['"]([^'"]+)['"]/);
+      if(m&&m[1]&&m[1]!==APP_VERSION){location.reload();}
+    }).catch(function(){});
+}
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible')checkForAppUpdate();
+});
+window.addEventListener('pageshow',function(){checkForAppUpdate();});
 </script>
 </body>
 </html>
