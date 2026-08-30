@@ -795,6 +795,13 @@ function saveWeight(id,val){
   sH(rTab());
 }
 function fmtD(ds){const p=ds.split(' ');return p[2]+' '+p[1];}
+function isoToday(){return today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');}
+function getMedBase(k){return gl('medbase_'+k)||null;}
+function toggleMedBase(k,ds){
+  if(getMedBase(k)===ds)localStorage.removeItem('medbase_'+k);
+  else sv('medbase_'+k,ds);
+  sH(rTab());
+}
 function getReps(id){return gl('reps_'+id)||'';}
 function saveReps(id,val){sv('reps_'+id,val);}
 
@@ -1465,9 +1472,16 @@ function saveMedValue(k,val,ds){
   sH(rTab());
 }
 function addMedValue(k){
-  const el=document.getElementById('newmed_'+k.replace(/[^a-zA-Z]/g,''));
+  const safe=k.replace(/[^a-zA-Z]/g,'');
+  const el=document.getElementById('newmed_'+safe);
+  const dEl=document.getElementById('newmeddate_'+safe);
   if(!el||!el.value)return;
-  saveMedValue(k,el.value);
+  let ds=tstr;
+  if(dEl&&dEl.value){
+    const parts=dEl.value.split('-');
+    ds=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2])).toDateString();
+  }
+  saveMedValue(k,el.value,ds);
   showCel('📏','Medida guardada');
 }
 function editMedEntry(k,ds){
@@ -1498,17 +1512,34 @@ function rMedidas(){
   const log=getMedLog();
   let h='<div class="slbl">Medidas corporales</div>';
   MEDIDAS.forEach(m=>{
-    const hist=(log[m.k]||[]).slice().reverse();
+    const raw=(log[m.k]||[]).slice().sort((a,b)=>new Date(a.d)-new Date(b.d));
+    const hist=raw.slice().reverse();
+    const baseDs=getMedBase(m.k);
+    const baseEntry=(baseDs&&raw.find(e=>e.d===baseDs))||raw[0];
+    let pctBadge='';
+    if(raw.length>=2&&baseEntry){
+      const last=raw[raw.length-1].v;
+      const pct=((last-baseEntry.v)/baseEntry.v*100);
+      const up=pct>0;
+      const customBase=baseEntry.d!==raw[0].d;
+      pctBadge='<span style="font-size:11px;font-weight:700;color:'+(up?'#E5484D':pct<0?'#1F8A52':'#8A94A6')+';margin-left:6px">'+(up?'▲':pct<0?'▼':'')+' '+(up?'+':'')+pct.toFixed(1)+'% desde '+(customBase?fmtD(baseEntry.d):'el primero')+'</span>';
+    }
     h+='<div class="card" style="margin-bottom:10px">'
-      +'<div style="font-size:13px;font-weight:700;color:#0A2540;margin-bottom:8px">'+m.k+'</div>'
+      +'<div style="font-size:13px;font-weight:700;color:#0A2540;margin-bottom:8px">'+m.k+pctBadge+'</div>'
+      +'<input type="date" id="newmeddate_'+m.k.replace(/[^a-zA-Z]/g,'')+'" value="'+isoToday()+'" style="border:1.5px solid #EEF1F5;border-radius:9px;padding:8px 10px;font-size:13px;color:#0A2540;font-family:-apple-system,sans-serif;width:100%;box-sizing:border-box;margin-bottom:8px">'
       +'<div style="display:flex;gap:8px;margin-bottom:'+(hist.length?'10px':'0')+'">'
       +'<input type="text" inputmode="decimal" id="newmed_'+m.k.replace(/[^a-zA-Z]/g,'')+'" placeholder="cm" style="flex:1;border:1.5px solid #007AFF;border-radius:9px;padding:8px 10px;font-size:16px;font-weight:700;color:#007AFF;text-align:center;font-family:-apple-system,sans-serif">'
       +'<button onclick="addMedValue(\''+m.k+'\')" style="background:#007AFF;color:#fff;border:none;border-radius:9px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:-apple-system,sans-serif">Guardar</button>'
       +'</div>';
     if(hist.length){
-      h+='<div>'+hist.map(e=>'<div onclick="editMedEntry(\''+m.k+'\',\''+e.d+'\')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 4px;border-top:1px solid #F2F4F7;cursor:pointer">'
-        +'<span style="font-size:12px;color:#5C6B7F">'+fmtD(e.d)+'</span>'
-        +'<span style="font-size:13px;font-weight:700;color:#0A2540">'+e.v+' cm</span></div>').join('')+'</div>';
+      h+='<div>'+hist.map(e=>{
+        const isBase=baseEntry&&e.d===baseEntry.d;
+        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 4px;border-top:1px solid #F2F4F7">'
+          +'<span onclick="editMedEntry(\''+m.k+'\',\''+e.d+'\')" style="font-size:12px;color:#5C6B7F;cursor:pointer;flex:1">'+fmtD(e.d)+'</span>'
+          +'<span onclick="editMedEntry(\''+m.k+'\',\''+e.d+'\')" style="font-size:13px;font-weight:700;color:#0A2540;cursor:pointer;margin-right:8px">'+e.v+' cm</span>'
+          +'<button onclick="event.stopPropagation();toggleMedBase(\''+m.k+'\',\''+e.d+'\')" style="background:none;border:none;font-size:14px;cursor:pointer;color:'+(isBase?'#FFD60A':'#D8DEE8')+'" title="Usar como punto de partida">★</button>'
+          +'</div>';
+      }).join('')+'</div>';
     }
     h+='</div>';
   });
