@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Train.">
 <meta name="theme-color" content="#FAFAFA">
-<meta name="app-version" content="2.6.0">
+<meta name="app-version" content="2.9.1">
 <title>Mariam Train</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#007AFF">
@@ -399,10 +399,10 @@ function fmtLoad(load, perSide){
 const SESS={
   pf:{name:'Glúteo + Piernas A',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'strength',base:[
     {id:'la1',name:'Hip Thrust con Barra',pattern:'Empuje de cadera',target:'4x8-12 @RIR 1-2',alts:['Hip Thrust en Máquina','Hip Thrust en Máquina Smith']},
-    {id:'la2',name:'Sentadilla Trasera con Barra',pattern:'Dominante de rodilla',target:'3x8-12 @RIR 2',alts:['Sentadilla en Máquina Smith','Hack Squat']},
     {id:'la3',name:'Peso Muerto Rumano Unilateral con Mancuerna',pattern:'Bisagra de cadera unilateral',target:'3x10-15 @RIR 2',alts:['Peso Muerto Rumano Unilateral en Polea','Peso Muerto Rumano Unilateral en Máquina Smith']},
-    {id:'la4',name:'Step Down con Mancuernas',pattern:'Dominante de rodilla unilateral',target:'3x10-15/pierna @RIR 2',alts:['Step Up con Mancuernas','Bulgarian Split Squat con Mancuernas']},
+    {id:'la4',name:'Step Down con Mancuernas',pattern:'Dominante de rodilla unilateral',target:'3x10-15/pierna @RIR 2',alts:['Step Up con Mancuernas']},
     {id:'la5',name:'Abducción de Cadera en Máquina (Tronco Inclinado)',pattern:'Abducción de cadera',target:'3x15-20 @RIR 1-2',alts:['Abducción de Cadera en Polea','Abducción de Cadera con Banda Elástica']},
+    {id:'la2c',choice:true,name:'Prensa de piernas',pattern:'Bloque adicional a elegir · 1 de 4',target:'3x8-12 @RIR 2',alts:['Extensión de cuádriceps en máquina','Step-down con polea','Flexión de isquiosurales en máquina']},
   ],acc:[]},
   th:{name:'Espalda + Bíceps',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'hyp',base:[
     {id:'up1',name:'Jalón al Pecho en Máquina Convergente (Agarre Neutro)',pattern:'Tracción vertical',target:'4x8-12 @RIR 1-2',alts:['Jalón al Pecho en Polea (Agarre Neutro)','Dominadas Asistidas']},
@@ -410,6 +410,7 @@ const SESS={
     {id:'up3',name:'Remo Unilateral en Polea',pattern:'Tracción horizontal unilateral',target:'3x10-15/lado @RIR 2',alts:['Remo Unilateral con Mancuerna','Remo Unilateral en Máquina']},
     {id:'up4',name:'Reverse Pec Deck',pattern:'Deltoides posterior',target:'3x12-15 @RIR 1-2',alts:['Face Pull en Polea con Cuerda','Reverse Cable Fly']},
     {id:'up5',name:'Curl de Bíceps en Polea Baja',pattern:'Flexión de codo',target:'4x10-15 @RIR 1-2',alts:['Curl de Bíceps con Barra EZ','Curl Inclinado con Mancuernas']},
+    {id:'up6',choice:true,name:'Dominadas asistidas',pattern:'Bloque adicional a elegir · 1 de 4',target:'3x8-12 @RIR 1-2',alts:['Pullover en polea alta','Jalón unilateral en polea','Remo en polea baja con agarre estrecho']},
   ],acc:[]},
   tf:{name:'Pecho + Tríceps',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'strength',base:[
     {id:'ps1',name:'Press Inclinado en Máquina Convergente',pattern:'Empuje horizontal',target:'4x8-12 @RIR 1-2',alts:['Press Inclinado con Mancuernas','Press Inclinado en Máquina Smith','Aperturas en Polea','Aperturas con Mancuernas','Fondos']},
@@ -417,6 +418,7 @@ const SESS={
     {id:'ps3',name:'Elevación Lateral Unilateral en Polea',pattern:'Abducción del hombro',target:'4x12-15 @RIR 1-2',alts:['Elevaciones Laterales con Mancuernas','Elevaciones Laterales en Máquina']},
     {id:'ps4',name:'Extensión de Tríceps en Polea con Cuerda',pattern:'Extensión de codo',target:'3x10-15 @RIR 1-2',alts:['Extensión de Tríceps en Polea con Barra Recta','Extensión de Tríceps en Polea con Barra V']},
     {id:'ps5',name:'Extensión de Tríceps Overhead en Polea con Cuerda',pattern:'Extensión de codo por encima de la cabeza',target:'3x10-15 @RIR 1-2',alts:['Extensión Overhead con Mancuerna','Extensión Overhead con Barra EZ']},
+    {id:'ps6',choice:true,name:'Fondos asistidos en máquina',pattern:'Bloque adicional a elegir · 1 de 3',target:'3x8-12 @RIR 1-2',alts:['Press de hombros en máquina','Press de hombros con mancuernas sentado']},
   ],acc:[]},
   ph:{name:'Glúteo + Piernas B',color:'#007AFF',bg:'rgba(0,122,255,0.07)',type:'hyp',base:[
     {id:'lb1',name:'Hip Thrust con Barra',pattern:'Empuje de cadera',target:'3x8-12 @RIR 1-2',alts:['Hip Thrust en Máquina','Hip Thrust en Máquina Smith']},
@@ -424,6 +426,7 @@ const SESS={
     {id:'lb3',name:'Peso Muerto Rumano Unilateral con Mancuerna',pattern:'Bisagra de cadera unilateral',target:'3x10-15/pierna @RIR 2',alts:['Peso Muerto Rumano Unilateral en Polea','Peso Muerto Rumano Unilateral en Máquina Smith']},
     {id:'lb4',name:'Curl Femoral Sentado',pattern:'Flexión de rodilla',target:'3x10-15 @RIR 1-2',alts:['Curl Femoral Tumbado','Curl Femoral Unilateral']},
     {id:'lb5',name:'Abducción de Cadera en Máquina (Posición Vertical)',pattern:'Abducción de cadera',target:'3x15-20 @RIR 1-2',alts:['Abducción de Cadera en Polea','Abducción de Cadera con Banda Elástica']},
+    {id:'lb6c',choice:true,name:'Extensión de cuádriceps en máquina',pattern:'Bloque adicional a elegir · 1 de 4',target:'3x8-12 @RIR 2',alts:['Prensa de piernas','Step-down con polea','Flexión de isquiosurales en máquina']},
   ],acc:[]}
 };
 
@@ -444,9 +447,11 @@ const CORE_FINISHER_CATS=[
     {id:'cf4a',name:'Wood Chop en polea',target:'10-15/lado'},{id:'cf4b',name:'Russian Twist',target:'12-16/lado'},{id:'cf4c',name:'Escaladores cruzados',target:'15-20/lado'}]},
 ];
 
-const APP_VERSION='2.8.0';
+const APP_VERSION='2.9.1';
 const CHANGELOG={
   '2.7.0':['Ejercicios con alternativas intercambiables (🔄) y peso propio para cada una','Objetivos diarios (pasos, sueño, cardio) con rachas y puntos de color en el calendario','Frase motivacional diaria','Nuevos nombres de días: Glúteo+Piernas, Espalda+Bíceps, Pecho+Tríceps'],
+  '2.9.1':['Bloque de piernas a elegir ahora es un bloque adicional (al final) tanto en Glúteo+Piernas A como en B','En Progreso los bloques a elegir muestran todas sus opciones, la elegida y su historial de pesos'],
+  '2.9.0':['Piernas: sentadilla con barra y búlgaras eliminadas; nuevo bloque a elegir (prensa, extensión de cuádriceps, step-down en polea, curl de isquios)','Espalda + Bíceps: nuevo bloque adicional a elegir (dominadas asistidas, pullover, jalón unilateral, remo estrecho)','Pecho + Tríceps: nuevo bloque adicional a elegir (fondos asistidos, press de hombros) y aperturas/fondos añadidos como opciones de pecho','Sin ejercicios repetidos dentro de una misma sesión'],
   '2.8.0':['Nuevo módulo 🏠 Entrena en Casa: genera entrenamientos de 25-35 min combinando EMOM/Tabata/Intervalos/AMRAP, marcable como completado y visible en el calendario','Medidas corporales rediseñadas: % de cambio respecto al primer registro (o a la fecha que marques con ★), fecha editable al añadir una medida','La app ahora se actualiza sola al reabrirla si hay una versión nueva disponible'],
 };
 
@@ -818,14 +823,35 @@ function getCurrentExName(ex){
   const idx=getAltIdx(ex.id);
   return idx>0&&ex.alts&&ex.alts[idx-1]?ex.alts[idx-1]:ex.name;
 }
-function setAlt(id,idx){sv('alt_'+id,idx);closeModal();sH(rTab());}
+const N_ALIAS={'prensa de piernas a 45°':'prensa','prensa de piernas':'prensa','curl femoral sentado':'curl femoral','curl femoral tumbado':'curl femoral','curl femoral unilateral':'curl femoral','flexión de isquiosurales en máquina':'curl femoral'};
+function normN(s){const t=(s||'').trim().toLowerCase();return N_ALIAS[t]||t;}
+function findSessKey(id){for(const sk in SESS){if(SESS[sk].base.some(e=>e.id===id))return sk;}return null;}
+function activeNamesElse(sk,exceptId){return SESS[sk].base.filter(e=>e.id!==exceptId).map(e=>normN(getCurrentExName(e)));}
+function setAlt(id,idx){
+  sv('alt_'+id,idx);
+  const sk=findSessKey(id);
+  if(sk){
+    const me=findEx(id);
+    const chosen=normN([me.name,...(me.alts||[])][idx]);
+    SESS[sk].base.forEach(o=>{
+      if(o.id===id||normN(getCurrentExName(o))!==chosen)return;
+      const used=SESS[sk].base.filter(e=>e.id!==o.id).map(e=>normN(getCurrentExName(e)));
+      const opts=[o.name,...(o.alts||[])];
+      const ni=opts.findIndex(n=>!used.includes(normN(n)));
+      if(ni>=0)sv('alt_'+o.id,ni);
+    });
+  }
+  closeModal();sH(rTab());
+}
 function openAltModal(id){
   const ex=findEx(id);if(!ex||!ex.alts||!ex.alts.length)return;
   const curIdx=getAltIdx(id);
-  let h='<div style="padding:16px 16px 4px"><div style="font-size:15px;font-weight:700">Cambiar ejercicio</div><div style="font-size:11px;color:#8A94A6;margin-top:2px">Mismas series, reps y RIR</div></div>';
+  let h='<div style="padding:16px 16px 4px"><div style="font-size:15px;font-weight:700">'+(ex.choice?'Elige tu ejercicio':'Cambiar ejercicio')+'</div><div style="font-size:11px;color:#8A94A6;margin-top:2px">Mismas series, reps y RIR</div></div>';
+  const sk0=findSessKey(id);const others=sk0?activeNamesElse(sk0,id):[];
   const options=[ex.name,...ex.alts];
   options.forEach((name,i)=>{
-    h+='<div class="opt-row" onclick="setAlt(\''+id+'\','+i+')"><div class="opt-dot" style="background:'+(curIdx===i?'#007AFF':'#EEF1F5')+'"></div><div style="flex:1;font-size:13px;font-weight:'+(curIdx===i?'700':'400')+';color:'+(curIdx===i?'#007AFF':'#111')+'">'+name+(i===0?' (principal)':'')+'</div>'+(curIdx===i?'<span style="color:#007AFF">✓</span>':'')+'</div>';
+    if(i!==curIdx&&others.includes(normN(name)))return;
+    h+='<div class="opt-row" onclick="setAlt(\''+id+'\','+i+')"><div class="opt-dot" style="background:'+(curIdx===i?'#007AFF':'#EEF1F5')+'"></div><div style="flex:1;font-size:13px;font-weight:'+(curIdx===i?'700':'400')+';color:'+(curIdx===i?'#007AFF':'#111')+'">'+name+(i===0&&!ex.choice?' (principal)':'')+'</div>'+(curIdx===i?'<span style="color:#007AFF">✓</span>':'')+'</div>';
   });
   document.getElementById('modal-body').innerHTML=h;
   document.getElementById('modal').classList.add('show');
@@ -850,7 +876,7 @@ function renderSimpleEx(ex,sdata,num){
   const lw=lastWeight(wid);
   const t=splitTarget(ex.target);
   const curName=getCurrentExName(ex);
-  const isAlt=curName!==ex.name;
+  const isAlt=!ex.choice&&curName!==ex.name;
   const c1=ok?'#34C77A':'#007AFF';
   const c2=ok?'#1F8A52':'#0A5FD1';
   const bBg=ok?'#E3F7EA':'#EAF2FE';
@@ -859,7 +885,7 @@ function renderSimpleEx(ex,sdata,num){
     +(num?'<div style="width:26px;height:26px;border-radius:8px;background:'+bBg+';color:'+c1+';font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+num+'</div>':'')
     +'<div style="flex:1;min-width:0">'
     +'<div style="display:flex;align-items:center;gap:6px">'
-    +'<div class="xn'+(ok?' ok':'')+'" style="flex:1">'+curName+'</div>'
+    +'<div class="xn'+(ok?' ok':'')+'" style="flex:1">'+curName+'</div>'+(ex.choice?'<span style="font-size:9px;font-weight:700;color:'+c1+';background:'+bBg+';padding:2px 6px;border-radius:6px;flex-shrink:0">ELIGE 1</span>':'')
     +(ex.alts&&ex.alts.length?'<button onclick="event.stopPropagation();openAltModal(\''+ex.id+'\')" style="flex-shrink:0;background:'+bBg+';border:none;border-radius:7px;padding:4px 7px;font-size:11px;color:'+c1+';cursor:pointer">🔄</button>':'')
     +'</div>'
     +(isAlt?'<div style="font-size:9.5px;color:#8A94A6;margin-top:1px">alternativa de '+ex.name+'</div>':'')
@@ -1158,7 +1184,7 @@ function renderCargasCards(){
       sdata.base.forEach(ex=>{
         const variants=[ex.name,...(ex.alts||[])];
         const curIdx=getAltIdx(ex.id);
-        h+='<div style="font-size:10px;color:#8A94A6;text-transform:uppercase;letter-spacing:.03em;margin:10px 2px 6px">'+(ex.pattern||'')+'</div>';
+        h+='<div style="font-size:10px;color:#8A94A6;text-transform:uppercase;letter-spacing:.03em;margin:10px 2px 6px">'+(ex.pattern||'')+(ex.choice?' — eliges: <span style="color:#007AFF;font-weight:700">'+getCurrentExName(ex)+'</span>':'')+'</div>';
         variants.forEach((vName,vi)=>{
           const wid=getVariantWeightId(ex,vi);
           const fullHist=(wl[wid]||[]).slice().reverse();
@@ -1168,7 +1194,7 @@ function renderCargasCards(){
           const rest=fullHist.length-shown.length;
           h+='<div style="background:'+(isCur?'#EAF2FE':'#fff')+';border:1px solid '+(isCur?'#BFDBFE':'#EEF1F5')+';border-radius:12px;padding:11px 12px;margin-bottom:8px">'
             +'<div style="display:flex;justify-content:space-between;align-items:center">'
-            +'<div style="font-size:13px;font-weight:600;color:#0A2540">'+vName+(vi===0?' <span style="font-weight:400;color:#8A94A6">(principal)</span>':'')+'</div>'
+            +'<div style="font-size:13px;font-weight:600;color:#0A2540">'+vName+(vi===0&&!ex.choice?' <span style="font-weight:400;color:#8A94A6">(principal)</span>':'')+'</div>'
             +(isCur?'<span style="font-size:9px;background:#007AFF;color:#fff;padding:2px 7px;border-radius:20px;font-weight:700">ACTIVO</span>':'')
             +'</div>'
             +(ex.target?'<div style="font-size:10px;color:#007AFF;font-weight:700;margin-top:3px">'+ex.target+'</div>':'')
